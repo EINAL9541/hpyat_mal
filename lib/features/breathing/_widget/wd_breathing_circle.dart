@@ -43,7 +43,7 @@ class BreathingCircleWidget extends StatelessWidget {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              // Outer Ripple Ring
+              // Outer Solid Color-Block Ripple Ring (Light Mint / Sakura Wash)
               AnimatedScale(
                 scale: targetScale * 1.15,
                 duration: animDuration,
@@ -53,12 +53,13 @@ class BreathingCircleWidget extends StatelessWidget {
                   height: context.h(230),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppColors.leafSoft.withValues(alpha: 0.35),
+                    color: AppColors.leafSoft,
+                    border: Border.all(color: AppColors.borderSubtle),
                   ),
                 ),
               ),
 
-              // Middle Soft Ring
+              // Middle Solid Botanical Ring
               AnimatedScale(
                 scale: targetScale * 1.08,
                 duration: animDuration,
@@ -68,12 +69,12 @@ class BreathingCircleWidget extends StatelessWidget {
                   height: context.h(190),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppColors.sageLight.withValues(alpha: 0.4),
+                    color: AppColors.sageLight.withValues(alpha: 0.45),
                   ),
                 ),
               ),
 
-              // Core Breathing Sphere
+              // Core Solid Color-Block Sphere (Starbucks House Green / Sakura Reserve)
               AnimatedScale(
                 scale: targetScale,
                 duration: animDuration,
@@ -83,21 +84,10 @@ class BreathingCircleWidget extends StatelessWidget {
                   height: context.h(150),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                      colors: [
-                        AppColors.emerald,
-                        AppColors.forestPrimary,
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.emerald.withValues(alpha: 0.35),
-                        blurRadius: 24,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
+                    color: state.isRunning
+                        ? AppColors.forestDeep
+                        : AppColors.emerald,
+                    boxShadow: AppColors.floatingShadow,
                   ),
                   child: Center(
                     child: Column(
@@ -118,7 +108,7 @@ class BreathingCircleWidget extends StatelessWidget {
                               : "START",
                           style: AppTextStyle.headingLarge(context).copyWith(
                             color: AppColors.baseWhite,
-                            fontWeight: FontWeight.w800,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ],

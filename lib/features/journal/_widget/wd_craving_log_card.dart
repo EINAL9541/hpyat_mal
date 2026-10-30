@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:hpyat_mal/core/extensions/context_extensions.dart';
@@ -14,114 +13,146 @@ class CravingLogCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dateFormat = DateFormat('MMM d • h:mm a');
+    final dateFormat = DateFormat('MMM d, h:mm a');
+    final accentColor = log.resisted ? AppColors.emerald : AppColors.amberWarm;
 
     return Container(
-      margin: EdgeInsets.only(bottom: context.h(10)),
-      padding: EdgeInsets.all(context.w(14)),
+      margin: EdgeInsets.only(bottom: context.h(12)),
       decoration: BoxDecoration(
         color: AppColors.surfaceCard,
-        borderRadius: context.borderRadius(all: 16),
-        border: Border.all(color: AppColors.border),
+        borderRadius: context.borderRadius(all: 12),
+        border: Border.all(color: AppColors.borderSubtle),
+        boxShadow: AppColors.cardShadow,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: context.w(8),
-                      vertical: context.h(4),
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.leafBackground,
-                      borderRadius: context.borderRadius(all: 8),
-                      border: Border.all(color: AppColors.borderSubtle),
-                    ),
-                    child: Text(
-                      log.trigger,
-                      style: AppTextStyle.captionSmall(context).copyWith(
-                        color: AppColors.forestDeep,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: context.w(8)),
-                  Row(
-                    children: List.generate(5, (index) {
-                      return Icon(
-                        Icons.circle,
-                        size: context.w(7),
-                        color: index < log.intensity
-                            ? AppColors.amberWarm
-                            : AppColors.border,
-                      );
-                    }),
-                  ),
-                ],
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              width: context.w(4),
+              decoration: BoxDecoration(
+                color: accentColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(context.r(12)),
+                  bottomLeft: Radius.circular(context.r(12)),
+                ),
               ),
-
-              // Resisted Badge
-              Container(
+            ),
+            Expanded(
+              child: Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: context.w(8),
-                  vertical: context.h(3),
+                  horizontal: context.w(14),
+                  vertical: context.h(12),
                 ),
-                decoration: BoxDecoration(
-                  color: log.resisted
-                      ? AppColors.leafSoft
-                      : AppColors.warningSoft,
-                  borderRadius: context.borderRadius(all: 8),
-                ),
-                child: Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(
-                      log.resisted ? LucideIcons.shieldCheck : LucideIcons.leaf,
-                      size: context.w(12),
-                      color: log.resisted
-                          ? AppColors.forestPrimary
-                          : AppColors.amberWarm,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  log.trigger,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTextStyle.bodySemiBold(context)
+                                      .copyWith(
+                                    color: AppColors.forestDeep,
+                                    fontSize: 14.5,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: context.w(8)),
+                              Row(
+                                children: List.generate(5, (index) {
+                                  return Container(
+                                    width: context.w(5),
+                                    height: context.w(5),
+                                    margin:
+                                        EdgeInsets.only(right: context.w(3)),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: index < log.intensity
+                                          ? accentColor
+                                          : AppColors.border,
+                                    ),
+                                  );
+                                }),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: context.w(8),
+                            vertical: context.h(3),
+                          ),
+                          decoration: BoxDecoration(
+                            color: log.resisted
+                                ? AppColors.leafSoft
+                                : AppColors.amberLight,
+                            borderRadius: context.borderRadius(all: 50),
+                            border: log.resisted
+                                ? null
+                                : Border.all(color: AppColors.skySoft),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                log.resisted
+                                    ? LucideIcons.check
+                                    : LucideIcons.rotateCcw,
+                                size: context.w(11),
+                                color: log.resisted
+                                    ? AppColors.forestPrimary
+                                    : AppColors.forestDeep,
+                              ),
+                              SizedBox(width: context.w(4)),
+                              Text(
+                                log.resisted ? "Resisted" : "Slip",
+                                style:
+                                    AppTextStyle.captionSmall(context).copyWith(
+                                  color: log.resisted
+                                      ? AppColors.forestPrimary
+                                      : AppColors.forestDeep,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(width: context.w(4)),
+                    if (log.note.isNotEmpty) ...[
+                      SizedBox(height: context.h(6)),
+                      Text(
+                        log.note,
+                        style: AppTextStyle.bodyMedium(context).copyWith(
+                          color: AppColors.textSecondary,
+                          fontSize: 13.5,
+                          height: 1.45,
+                        ),
+                      ),
+                    ],
+                    SizedBox(height: context.h(6)),
                     Text(
-                      log.resisted ? "Resisted" : "Slip",
+                      dateFormat.format(log.timestamp),
                       style: AppTextStyle.captionSmall(context).copyWith(
-                        color: log.resisted
-                            ? AppColors.forestPrimary
-                            : AppColors.amberWarm,
-                        fontWeight: FontWeight.w700,
+                        color: AppColors.textMuted,
+                        fontSize: 11.5,
                       ),
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
-
-          if (log.note.isNotEmpty) ...[
-            SizedBox(height: context.h(8)),
-            Text(
-              log.note,
-              style: AppTextStyle.bodyMedium(context).copyWith(
-                color: AppColors.textPrimary,
-                fontSize: 13,
-              ),
             ),
           ],
-
-          SizedBox(height: context.h(8)),
-
-          Text(
-            dateFormat.format(log.timestamp),
-            style: AppTextStyle.captionSmall(context).copyWith(
-              color: AppColors.textMuted,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

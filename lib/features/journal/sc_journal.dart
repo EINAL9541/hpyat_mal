@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:hpyat_mal/core/extensions/context_extensions.dart';
 import 'package:hpyat_mal/core/theme/app_color.dart';
@@ -38,6 +37,12 @@ class JournalScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final journal = ref.watch(journalProvider);
+    final topTrigger = journal.triggerCounts.isEmpty
+        ? "None yet"
+        : (journal.triggerCounts.entries.toList()
+              ..sort((a, b) => b.value.compareTo(a.value)))
+            .first
+            .key;
 
     return Scaffold(
       backgroundColor: AppColors.surface,
@@ -45,52 +50,56 @@ class JournalScreen extends ConsumerWidget {
         bottom: false,
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(
-            horizontal: context.w(18),
+            horizontal: context.w(16),
             vertical: context.h(12),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header
+              // Header with 50px Full-Pill Primary CTA
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Craving Journal",
-                        style: AppTextStyle.headingMedium(context).copyWith(
-                          color: AppColors.forestDeep,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Craving Journal",
+                          style: AppTextStyle.headingLarge(context).copyWith(
+                            color: AppColors.forestPrimary,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: context.h(2)),
-                      Text(
-                        "Track triggers & celebrate every urge conquered",
-                        style: AppTextStyle.captionMedium(context),
-                      ),
-                    ],
+                        SizedBox(height: context.h(2)),
+                        Text(
+                          "Spot your triggers and celebrate every win",
+                          style: AppTextStyle.captionMedium(context),
+                        ),
+                      ],
+                    ),
                   ),
+                  SizedBox(width: context.w(12)),
                   ElevatedButton.icon(
                     onPressed: () => _openAddSheet(context, ref),
                     icon: Icon(LucideIcons.plus, size: context.w(15)),
                     label: Text(
-                      "Log",
+                      "Log Urge",
                       style: AppTextStyle.bodySemiBold(context).copyWith(
                         color: AppColors.baseWhite,
-                        fontSize: 13,
+                        fontSize: 13.5,
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.forestPrimary,
+                      backgroundColor: AppColors.emerald,
                       foregroundColor: AppColors.baseWhite,
                       padding: EdgeInsets.symmetric(
-                        horizontal: context.w(12),
-                        vertical: context.h(8),
+                        horizontal: context.w(16),
+                        vertical: context.h(10),
                       ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: context.borderRadius(all: 12),
-                      ),
+                      shape: const StadiumBorder(),
                       elevation: 0,
                     ),
                   ),
@@ -99,131 +108,163 @@ class JournalScreen extends ConsumerWidget {
 
               SizedBox(height: context.h(16)),
 
-              // Stats Row
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: EdgeInsets.all(context.w(14)),
-                      decoration: BoxDecoration(
-                        color: AppColors.surfaceCard,
-                        borderRadius: context.borderRadius(all: 16),
-                        border: Border.all(color: AppColors.border),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Resistance Rate",
-                            style: AppTextStyle.captionSmall(context),
-                          ),
-                          SizedBox(height: context.h(4)),
-                          Text(
-                            "${journal.resistanceRate.toStringAsFixed(0)}%",
-                            style: AppTextStyle.headingLarge(context).copyWith(
-                              color: AppColors.forestPrimary,
+              // Unified Summary Card (12px White Card on Warm Cream Canvas)
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.w(16),
+                  vertical: context.h(16),
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.surfaceCard,
+                  borderRadius: context.borderRadius(all: 12),
+                  border: Border.all(color: AppColors.borderSubtle),
+                  boxShadow: AppColors.cardShadow,
+                ),
+                child: IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "URGES RESISTED",
+                              style: AppTextStyle.captionSmall(context).copyWith(
+                                color: AppColors.textMuted,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 10.5,
+                                letterSpacing: 0.8,
+                              ),
                             ),
-                          ),
-                          SizedBox(height: context.h(2)),
-                          Text(
-                            "${journal.resistedCount} of ${journal.totalCravings} beaten",
-                            style: AppTextStyle.captionSmall(context).copyWith(
-                              color: AppColors.emerald,
-                              fontWeight: FontWeight.w600,
+                            SizedBox(height: context.h(4)),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.baseline,
+                              textBaseline: TextBaseline.alphabetic,
+                              children: [
+                                Text(
+                                  "${journal.resistanceRate.toStringAsFixed(0)}%",
+                                  style:
+                                      AppTextStyle.headingLarge(context).copyWith(
+                                    color: AppColors.forestDeep,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                SizedBox(width: context.w(6)),
+                                Flexible(
+                                  child: Text(
+                                    "(${journal.resistedCount}/${journal.totalCravings})",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: AppTextStyle.captionSmall(context)
+                                        .copyWith(
+                                      color: AppColors.emerald,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
+                      VerticalDivider(
+                        width: context.w(28),
+                        thickness: 1,
+                        color: AppColors.borderSubtle,
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "MOST COMMON TRIGGER",
+                              style: AppTextStyle.captionSmall(context).copyWith(
+                                color: AppColors.textMuted,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 10.5,
+                                letterSpacing: 0.8,
+                              ),
+                            ),
+                            SizedBox(height: context.h(6)),
+                            Text(
+                              topTrigger,
+                              style:
+                                  AppTextStyle.headingSmall(context).copyWith(
+                                color: AppColors.forestDeep,
+                                fontSize: 16,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(width: context.w(10)),
-                  Expanded(
-                    child: Container(
-                      padding: EdgeInsets.all(context.w(14)),
-                      decoration: BoxDecoration(
-                        color: AppColors.surfaceCard,
-                        borderRadius: context.borderRadius(all: 16),
-                        border: Border.all(color: AppColors.border),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Top Trigger",
-                            style: AppTextStyle.captionSmall(context),
-                          ),
-                          SizedBox(height: context.h(4)),
-                          Text(
-                            journal.triggerCounts.isEmpty
-                                ? "None"
-                                : (journal.triggerCounts.entries.toList()
-                                      ..sort((a, b) =>
-                                          b.value.compareTo(a.value)))
-                                    .first
-                                    .key,
-                            style: AppTextStyle.headingSmall(context).copyWith(
-                              color: AppColors.forestDeep,
-                              fontSize: 16,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          SizedBox(height: context.h(2)),
-                          Text(
-                            "Know your danger zone",
-                            style: AppTextStyle.captionSmall(context),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
 
               SizedBox(height: context.h(20)),
 
               Text(
-                "Craving History",
-                style: AppTextStyle.headingSmall(context).copyWith(
-                  color: AppColors.forestDeep,
-                  fontSize: 16,
+                "RECENT ENTRIES",
+                style: AppTextStyle.captionSmall(context).copyWith(
+                  color: AppColors.textMuted,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.9,
                 ),
               ),
 
-              SizedBox(height: context.h(10)),
+              SizedBox(height: context.h(12)),
 
               if (journal.logs.isEmpty)
                 Container(
                   width: double.infinity,
-                  padding: EdgeInsets.all(context.w(24)),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.w(20),
+                    vertical: context.h(32),
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.surfaceCard,
-                    borderRadius: context.borderRadius(all: 16),
-                    border: Border.all(color: AppColors.border),
+                    borderRadius: context.borderRadius(all: 12),
+                    border: Border.all(color: AppColors.borderSubtle),
+                    boxShadow: AppColors.cardShadow,
                   ),
-                  child: Center(
-                    child: Column(
-                      children: [
-                        const Text("📝", style: TextStyle(fontSize: 32)),
-                        SizedBox(height: context.h(8)),
-                        Text(
-                          "No cravings logged yet",
-                          style: AppTextStyle.bodySemiBold(context),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: context.w(52),
+                        height: context.w(52),
+                        decoration: BoxDecoration(
+                          color: AppColors.leafSoft,
+                          shape: BoxShape.circle,
                         ),
-                        SizedBox(height: context.h(4)),
-                        Text(
-                          "Log whenever you feel an urge to see your patterns over time.",
-                          textAlign: TextAlign.center,
-                          style: AppTextStyle.captionMedium(context),
+                        child: Icon(
+                          LucideIcons.feather,
+                          color: AppColors.forestPrimary,
+                          size: context.w(22),
                         ),
-                      ],
-                    ),
+                      ),
+                      SizedBox(height: context.h(12)),
+                      Text(
+                        "No cravings logged yet",
+                        style: AppTextStyle.bodySemiBold(context).copyWith(
+                          color: AppColors.forestDeep,
+                        ),
+                      ),
+                      SizedBox(height: context.h(4)),
+                      Text(
+                        "Whenever an urge hits, log it here to notice what triggers you most.",
+                        textAlign: TextAlign.center,
+                        style: AppTextStyle.captionMedium(context),
+                      ),
+                    ],
                   ),
                 )
               else
                 ...journal.logs.map((log) => CravingLogCardWidget(log: log)),
 
-              SizedBox(height: context.h(85)),
+              SizedBox(height: context.h(24)),
             ],
           ),
         ),

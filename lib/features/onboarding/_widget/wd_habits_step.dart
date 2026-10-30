@@ -34,7 +34,7 @@ class HabitsStepWidget extends StatelessWidget {
     );
 
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: context.w(22)),
+      padding: EdgeInsets.symmetric(horizontal: context.w(20)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -42,9 +42,9 @@ class HabitsStepWidget extends StatelessWidget {
           Text(
             LocaleKeys.onboarding_habitsTitle.tr(),
             style: AppTextStyle.headingLarge(context).copyWith(
-              color: AppColors.forestDeep,
-              fontSize: 25,
-              height: 1.5,
+              color: AppColors.forestPrimary,
+              fontSize: 24,
+              height: 1.4,
             ),
           ),
           SizedBox(height: context.h(8)),
@@ -53,7 +53,7 @@ class HabitsStepWidget extends StatelessWidget {
             style: AppTextStyle.bodyMedium(context).copyWith(
               color: AppColors.textSecondary,
               fontSize: 15,
-              height: 1.65,
+              height: 1.6,
             ),
           ),
           SizedBox(height: context.h(22)),
@@ -65,6 +65,7 @@ class HabitsStepWidget extends StatelessWidget {
             hintText: '15',
             unit: LocaleKeys.onboarding_cigsPerDayUnit.tr(),
             isNumber: true,
+            borderRadius: 12,
             style: inputStyle,
             hintStyle: hintStyle,
           ),
@@ -78,6 +79,7 @@ class HabitsStepWidget extends StatelessWidget {
             hintText: '20',
             unit: LocaleKeys.onboarding_cigsPerPackUnit.tr(),
             isNumber: true,
+            borderRadius: 12,
             style: inputStyle,
             hintStyle: hintStyle,
           ),
@@ -91,6 +93,7 @@ class HabitsStepWidget extends StatelessWidget {
             hintText: '3500',
             unit: LocaleKeys.onboarding_packCostUnit.tr(),
             isNumber: true,
+            borderRadius: 12,
             style: inputStyle,
             hintStyle: hintStyle,
           ),

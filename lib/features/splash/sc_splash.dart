@@ -51,21 +51,9 @@ class SplashScreen extends HookConsumerWidget {
 
     return Scaffold(
       backgroundColor: AppColors.surface,
-      body: Container(
-        width: double.infinity,
-        padding: context.edgeInsets(horizontal: 24),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              AppColors.leafBackground,
-              AppColors.surface,
-              AppColors.skyMist.withValues(alpha: 0.35),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: SafeArea(
+      body: SafeArea(
+        child: Padding(
+          padding: context.edgeInsets(horizontal: 24),
           child: Stack(
             children: [
               Center(
@@ -76,25 +64,39 @@ class SplashScreen extends HookConsumerWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Image.asset(
-                          "assets/images/app_icon_transparent.png",
-                          width: context.w(100),
+                        Container(
+                          width: context.w(116),
+                          height: context.w(116),
+                          padding: EdgeInsets.all(context.w(16)),
+                          decoration: BoxDecoration(
+                            color: AppColors.surfaceCard,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: AppColors.borderSubtle,
+                              width: 1.5,
+                            ),
+                            boxShadow: AppColors.cardShadow,
+                          ),
+                          child: Image.asset(
+                            "assets/images/app_icon_transparent.png",
+                            fit: BoxFit.contain,
+                          ),
                         ),
-                        SizedBox(height: context.h(24)),
+                        SizedBox(height: context.h(22)),
                         Text(
                           "Hpyat Mal",
                           style: AppTextStyle.display(context).copyWith(
-                            color: AppColors.forestDeep,
+                            color: AppColors.forestPrimary,
                             letterSpacing: -0.5,
                           ),
                         ),
-                        SizedBox(height: context.h(12)),
+                        SizedBox(height: context.h(10)),
                         Text(
                           LocaleKeys.splash_tagLine.tr(),
                           textAlign: TextAlign.center,
                           style: AppTextStyle.bodyMedium(context).copyWith(
                             color: AppColors.textSecondary,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
@@ -103,14 +105,24 @@ class SplashScreen extends HookConsumerWidget {
                 ),
               ),
 
-              // Version at the bottom
+              // Version pill at the bottom
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
                   padding: context.edgeInsets(bottom: 24),
-                  child: Text(
-                    LocaleKeys.splash_version.tr(),
-                    style: AppTextStyle.captionSmall(context),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.w(12),
+                      vertical: context.h(4),
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.surfaceCardMuted,
+                      borderRadius: context.borderRadius(all: 50),
+                    ),
+                    child: Text(
+                      LocaleKeys.splash_version.tr(),
+                      style: AppTextStyle.captionSmall(context),
+                    ),
                   ),
                 ),
               ),

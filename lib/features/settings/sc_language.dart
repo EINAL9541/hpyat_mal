@@ -39,7 +39,7 @@ class LanguageScreen extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(
-            horizontal: context.w(22),
+            horizontal: context.w(16),
             vertical: context.h(12),
           ),
           child: Column(
@@ -48,14 +48,14 @@ class LanguageScreen extends StatelessWidget {
               Text(
                 LocaleKeys.settings_languageSectionTitle.tr(),
                 style: AppTextStyle.headingSmall(context)
-                    .copyWith(color: AppColors.forestDeep),
+                    .copyWith(color: AppColors.forestPrimary),
               ),
               SizedBox(height: context.h(4)),
               Text(
                 LocaleKeys.settings_languageSectionDesc.tr(),
                 style: AppTextStyle.captionMedium(context),
               ),
-              SizedBox(height: context.h(14)),
+              SizedBox(height: context.h(16)),
               LanguageChoiceCardWidget(
                 badge: LocaleKeys.common_mm.tr(),
                 title: LocaleKeys.settings_languageMyanmarTitle.tr(),
@@ -65,7 +65,7 @@ class LanguageScreen extends StatelessWidget {
                   context.setLocale(const Locale('my'));
                 },
               ),
-              SizedBox(height: context.h(10)),
+              SizedBox(height: context.h(12)),
               LanguageChoiceCardWidget(
                 badge: LocaleKeys.common_en.tr(),
                 title: LocaleKeys.settings_languageEnglishTitle.tr(),

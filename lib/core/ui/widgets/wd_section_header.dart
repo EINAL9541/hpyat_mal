@@ -36,7 +36,7 @@ class AppSectionHeaderWidget extends StatelessWidget {
                 title,
                 style: titleStyle ??
                     AppTextStyle.headingMedium(context).copyWith(
-                      color: AppColors.forestDeep,
+                      color: AppColors.forestPrimary,
                     ),
               ),
               if (subtitle != null) ...[

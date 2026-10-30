@@ -53,7 +53,7 @@ class AppTextFieldWidget extends StatelessWidget {
     this.prefixIcon,
     this.fillColor,
     this.contentPadding,
-    this.borderRadius = 14,
+    this.borderRadius = 12,
     this.onChanged,
     this.onSubmitted,
   });
@@ -102,12 +102,13 @@ class AppTextFieldWidget extends StatelessWidget {
       onSubmitted: onSubmitted,
       style: style ??
           AppTextStyle.bodySemiBold(context).copyWith(
-            color: AppColors.forestDeep,
+            color: AppColors.textPrimary,
             fontSize: 16,
           ),
       decoration: InputDecoration(
         labelText: labelText,
-        labelStyle: labelText != null ? AppTextStyle.captionMedium(context) : null,
+        labelStyle:
+            labelText != null ? AppTextStyle.captionMedium(context) : null,
         hintText: hintText,
         hintStyle: hintStyle ??
             AppTextStyle.bodyMedium(context).copyWith(
@@ -131,11 +132,11 @@ class AppTextFieldWidget extends StatelessWidget {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: context.borderRadius(all: borderRadius),
-          borderSide: BorderSide(color: AppColors.border, width: 1.2),
+          borderSide: BorderSide(color: AppColors.border, width: 1.0),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: context.borderRadius(all: borderRadius),
-          borderSide: BorderSide(color: AppColors.emerald, width: 1.8),
+          borderSide: BorderSide(color: AppColors.emerald, width: 1.6),
         ),
       ),
     );

@@ -90,7 +90,7 @@ class PlantSeedStepWidget extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         return SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: context.w(24)),
+          padding: EdgeInsets.symmetric(horizontal: context.w(20)),
           child: ConstrainedBox(
             constraints: BoxConstraints(minHeight: constraints.maxHeight),
             child: IntrinsicHeight(
@@ -112,43 +112,43 @@ class PlantSeedStepWidget extends StatelessWidget {
 
                   SizedBox(height: context.h(12)),
 
-                  // 2. Refined Hierarchy: Warm Name Pill + Bold Ready Heading
+                  // 2. Refined Hierarchy: 50px Gold-Outlined Pill + Bold Ready Heading
                   Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: context.w(12),
                       vertical: context.h(4),
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.leafSoft,
-                      borderRadius: context.borderRadius(all: 20),
+                      color: AppColors.amberLight,
+                      borderRadius: context.borderRadius(all: 50),
+                      border: Border.all(color: AppColors.amberWarm),
                     ),
                     child: Text(
-                      LocaleKeys.onboarding_readyGreeting
-                          .tr(args: [displayName]),
+                      "★ ${LocaleKeys.onboarding_readyGreeting.tr(args: [displayName])}",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: AppTextStyle.captionMedium(context).copyWith(
-                        color: AppColors.forestPrimary,
+                        color: AppColors.forestDeep,
                         fontWeight: FontWeight.w700,
-                        fontSize: 13.5,
+                        fontSize: 13,
                       ),
                     ),
                   ),
-                  SizedBox(height: context.h(6)),
+                  SizedBox(height: context.h(8)),
                   Text(
                     LocaleKeys.onboarding_readyToPlant.tr(),
                     maxLines: 2,
                     textAlign: TextAlign.center,
                     style: AppTextStyle.headingLarge(context).copyWith(
-                      color: AppColors.forestDeep,
-                      fontSize: 25,
+                      color: AppColors.forestPrimary,
+                      fontSize: 24,
                       height: 1.4,
                     ),
                   ),
 
                   SizedBox(height: context.h(16)),
 
-                  // 3. ONE HERO CARD: Yearly Savings (Estimated) + Divider + Daily | Monthly
+                  // 3. Solid House Band Hero Card (#1E3932 / #381824 — No Gradients)
                   Container(
                     width: double.infinity,
                     padding: EdgeInsets.symmetric(
@@ -156,22 +156,9 @@ class PlantSeedStepWidget extends StatelessWidget {
                       vertical: context.h(18),
                     ),
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          AppColors.forestDeep,
-                          AppColors.forestPrimary,
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: context.borderRadius(all: 22),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.forestDeep.withValues(alpha: 0.14),
-                          blurRadius: 18,
-                          offset: const Offset(0, 6),
-                        ),
-                      ],
+                      color: AppColors.forestDeep,
+                      borderRadius: context.borderRadius(all: 16),
+                      boxShadow: AppColors.cardShadow,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -180,7 +167,7 @@ class PlantSeedStepWidget extends StatelessWidget {
                           LocaleKeys.onboarding_yearlySaveCaption.tr(),
                           textAlign: TextAlign.center,
                           style: AppTextStyle.captionMedium(context).copyWith(
-                            color: AppColors.leafSoft,
+                            color: AppColors.baseWhite.withValues(alpha: 0.72),
                             fontWeight: FontWeight.w600,
                             fontSize: 13.5,
                             height: 1.4,
@@ -203,7 +190,7 @@ class PlantSeedStepWidget extends StatelessWidget {
                         Divider(
                           height: 1,
                           thickness: 1,
-                          color: AppColors.baseWhite.withValues(alpha: 0.18),
+                          color: AppColors.baseWhite.withValues(alpha: 0.14),
                         ),
                         SizedBox(height: context.h(10)),
                         Row(
@@ -217,7 +204,7 @@ class PlantSeedStepWidget extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                                 style:
                                     AppTextStyle.bodySemiBold(context).copyWith(
-                                  color: AppColors.leafSoft,
+                                  color: AppColors.amberWarm,
                                   fontSize: 13.5,
                                   height: 1.4,
                                 ),
@@ -231,7 +218,7 @@ class PlantSeedStepWidget extends StatelessWidget {
                                 "|",
                                 style: TextStyle(
                                   color: AppColors.baseWhite
-                                      .withValues(alpha: 0.35),
+                                      .withValues(alpha: 0.30),
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -259,7 +246,7 @@ class PlantSeedStepWidget extends StatelessWidget {
 
                   SizedBox(height: context.h(16)),
 
-                  // 4. Quit Date Selector Pill ("Starting Today" vs "Quit Earlier")
+                  // 4. Quit Date Selector Pills (50px Full-Pill Options with 2px Active Ring)
                   Row(
                     children: [
                       Expanded(
@@ -276,14 +263,14 @@ class PlantSeedStepWidget extends StatelessWidget {
                             ),
                             decoration: BoxDecoration(
                               color: !isQuitEarlier
-                                  ? AppColors.leafSoft.withValues(alpha: 0.75)
+                                  ? AppColors.leafSoft
                                   : AppColors.surfaceCard,
-                              borderRadius: context.borderRadius(all: 14),
+                              borderRadius: context.borderRadius(all: 50),
                               border: Border.all(
                                 color: !isQuitEarlier
                                     ? AppColors.emerald
                                     : AppColors.border,
-                                width: !isQuitEarlier ? 1.6 : 1.1,
+                                width: !isQuitEarlier ? 2.0 : 1.0,
                               ),
                             ),
                             child: Row(
@@ -333,14 +320,14 @@ class PlantSeedStepWidget extends StatelessWidget {
                             ),
                             decoration: BoxDecoration(
                               color: isQuitEarlier
-                                  ? AppColors.leafSoft.withValues(alpha: 0.75)
+                                  ? AppColors.leafSoft
                                   : AppColors.surfaceCard,
-                              borderRadius: context.borderRadius(all: 14),
+                              borderRadius: context.borderRadius(all: 50),
                               border: Border.all(
                                 color: isQuitEarlier
                                     ? AppColors.emerald
                                     : AppColors.border,
-                                width: isQuitEarlier ? 1.6 : 1.1,
+                                width: isQuitEarlier ? 2.0 : 1.0,
                               ),
                             ),
                             child: Row(
@@ -380,52 +367,64 @@ class PlantSeedStepWidget extends StatelessWidget {
                     ],
                   ),
 
-                  SizedBox(height: context.h(18)),
+                  SizedBox(height: context.h(16)),
 
-                  // 5. Personal Reason Quote Block (Left accent bar, no box)
-                  IntrinsicHeight(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Container(
-                          width: context.w(4),
-                          decoration: BoxDecoration(
-                            color: AppColors.emerald,
-                            borderRadius: context.borderRadius(all: 4),
+                  // 5. Gold Ceremony Promise Card (#FAF6EE Gold Lightest + #CBA258 Gold)
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.w(14),
+                      vertical: context.h(12),
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.amberLight,
+                      borderRadius: context.borderRadius(all: 12),
+                      border: Border.all(color: AppColors.skySoft),
+                    ),
+                    child: IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Container(
+                            width: context.w(3.5),
+                            decoration: BoxDecoration(
+                              color: AppColors.amberWarm,
+                              borderRadius: context.borderRadius(all: 4),
+                            ),
                           ),
-                        ),
-                        SizedBox(width: context.w(14)),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                LocaleKeys.onboarding_anchorReasonTitle.tr(),
-                                style:
-                                    AppTextStyle.captionMedium(context).copyWith(
-                                  color: AppColors.forestPrimary,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 13,
-                                  height: 1.4,
+                          SizedBox(width: context.w(12)),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "★ ${LocaleKeys.onboarding_anchorReasonTitle.tr()}",
+                                  style: AppTextStyle.captionMedium(context)
+                                      .copyWith(
+                                    color: AppColors.forestDeep,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 12.5,
+                                    height: 1.4,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(height: context.h(3)),
-                              Text(
-                                effectiveWhy,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style:
-                                    AppTextStyle.headingSmall(context).copyWith(
-                                  color: AppColors.forestDeep,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 16.5,
-                                  height: 1.5,
+                                SizedBox(height: context.h(3)),
+                                Text(
+                                  effectiveWhy,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTextStyle.headingSmall(context)
+                                      .copyWith(
+                                    color: AppColors.forestDeep,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 15.5,
+                                    height: 1.45,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
 
@@ -481,33 +480,17 @@ class _SakuraMedallionPainter extends CustomPainter {
     final center = Offset(size.width * 0.5, size.height * 0.5);
     final radius = size.width * 0.48;
 
-    // Circular medallion background adapting to Cherry vs Emerald
-    final bgPaint = Paint()
-      ..shader = LinearGradient(
-        colors: isCherry
-            ? const [
-                Color(0xFFFDF0F5),
-                Color(0xFFFCE4EE),
-              ]
-            : const [
-                Color(0xFFF2F9F5),
-                Color(0xFFD8F3DC),
-              ],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ).createShader(Rect.fromCircle(center: center, radius: radius));
+    // Solid Botanical Medallion Background (Starbucks Green Light / Sakura Light)
+    final bgPaint = Paint()..color = AppColors.leafSoft;
     canvas.drawCircle(center, radius, bgPaint);
 
     canvas.drawCircle(
       center,
       radius,
       Paint()
-        ..color = (isCherry
-                ? const Color(0xFFFFB3C6)
-                : const Color(0xFF74C69D))
-            .withValues(alpha: 0.70)
+        ..color = AppColors.emerald
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.4,
+        ..strokeWidth = 1.6,
     );
 
     // Mini curved sapling stem
@@ -522,19 +505,19 @@ class _SakuraMedallionPainter extends CustomPainter {
     canvas.drawPath(
       stemPath,
       Paint()
-        ..color = const Color(0xFF5C4033)
+        ..color = AppColors.barkBrown
         ..strokeWidth = 3.0
         ..strokeCap = StrokeCap.round
         ..style = PaintingStyle.stroke,
     );
 
-    // Two green leaves at base of stem
+    // Two botanical leaves at base of stem
     canvas.save();
     canvas.translate(center.dx - 7, center.dy + 6);
     canvas.rotate(-0.45);
     canvas.drawOval(
       Rect.fromCenter(center: Offset.zero, width: 12, height: 6.5),
-      Paint()..color = const Color(0xFF40916C),
+      Paint()..color = AppColors.forestPrimary,
     );
     canvas.restore();
 
@@ -543,11 +526,11 @@ class _SakuraMedallionPainter extends CustomPainter {
     canvas.rotate(0.45);
     canvas.drawOval(
       Rect.fromCenter(center: Offset.zero, width: 12, height: 6.5),
-      Paint()..color = const Color(0xFF52B788),
+      Paint()..color = AppColors.emerald,
     );
     canvas.restore();
 
-    // Crown at top of medallion (5-petal Sakura vs Radiant Emerald Crown)
+    // Crown at top of medallion
     final flowerCenter = Offset(center.dx, center.dy - radius * 0.25);
     const flowerR = 11.5;
     for (int i = 0; i < 5; i++) {
@@ -568,25 +551,19 @@ class _SakuraMedallionPainter extends CustomPainter {
         ..close();
       canvas.drawPath(
         petal,
-        Paint()
-          ..color = isCherry
-              ? const Color(0xFFFF85A1)
-              : const Color(0xFF40916C),
+        Paint()..color = AppColors.emerald,
       );
       canvas.restore();
     }
     canvas.drawCircle(
       flowerCenter,
       2.6,
-      Paint()
-        ..color = isCherry
-            ? const Color(0xFFD84B78)
-            : const Color(0xFF1B4D3E),
+      Paint()..color = AppColors.forestDeep,
     );
     canvas.drawCircle(
       flowerCenter,
       1.3,
-      Paint()..color = const Color(0xFFFFD166),
+      Paint()..color = AppColors.amberWarm,
     );
   }
 

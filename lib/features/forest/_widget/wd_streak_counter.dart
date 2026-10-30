@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:hpyat_mal/core/extensions/context_extensions.dart';
 import 'package:hpyat_mal/core/theme/app_color.dart';
 import 'package:hpyat_mal/core/theme/app_text_style.dart';
@@ -49,60 +48,77 @@ class StreakCounterWidget extends ConsumerWidget {
       displaySeconds = seconds ?? 0;
     }
 
-    return Container(
-      width: double.infinity,
+    return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: context.w(18),
-        vertical: context.h(16),
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceCard,
-        borderRadius: context.borderRadius(all: 20),
-        border: Border.all(color: AppColors.border, width: 1.2),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.forestDeep.withValues(alpha: 0.04),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        horizontal: context.w(4),
+        vertical: context.h(4),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                stageName,
-                style: AppTextStyle.headingSmall(context).copyWith(
-                  color: AppColors.forestPrimary,
-                ),
+          // Starbucks Rewards-style Gold-outlined Ceremony Pill ("★ Stage Name")
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: context.w(12),
+              vertical: context.h(4),
+            ),
+            decoration: BoxDecoration(
+              color: AppColors.amberLight,
+              borderRadius: context.borderRadius(all: 50),
+              border: Border.all(color: AppColors.amberWarm, width: 1),
+            ),
+            child: Text(
+              "★ ${stageName.toUpperCase()}",
+              style: AppTextStyle.captionSmall(context).copyWith(
+                color: AppColors.forestDeep,
+                fontWeight: FontWeight.w700,
+                fontSize: 11,
+                letterSpacing: 0.6,
               ),
-            ],
+            ),
           ),
-          SizedBox(height: context.h(2)),
+          SizedBox(height: context.h(6)),
           Text(
             stageDescription,
             textAlign: TextAlign.center,
             style: AppTextStyle.captionMedium(context).copyWith(
-              color: AppColors.textMuted,
+              color: AppColors.textSecondary,
             ),
           ),
           SizedBox(height: context.h(14)),
-
-          // Time Grid
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              TimeUnitWidget(value: displayDays.toString().padLeft(2, '0'), label: 'DAYS'),
-              _buildDivider(context),
-              TimeUnitWidget(value: displayHours.toString().padLeft(2, '0'), label: 'HRS'),
-              _buildDivider(context),
-              TimeUnitWidget(value: displayMinutes.toString().padLeft(2, '0'), label: 'MINS'),
-              _buildDivider(context),
-              TimeUnitWidget(value: displaySeconds.toString().padLeft(2, '0'), label: 'SECS'),
-            ],
+          IntrinsicHeight(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child: TimeUnitWidget(
+                    value: displayDays.toString().padLeft(2, '0'),
+                    label: 'DAYS',
+                  ),
+                ),
+                _buildDivider(context),
+                Expanded(
+                  child: TimeUnitWidget(
+                    value: displayHours.toString().padLeft(2, '0'),
+                    label: 'HRS',
+                  ),
+                ),
+                _buildDivider(context),
+                Expanded(
+                  child: TimeUnitWidget(
+                    value: displayMinutes.toString().padLeft(2, '0'),
+                    label: 'MINS',
+                  ),
+                ),
+                _buildDivider(context),
+                Expanded(
+                  child: TimeUnitWidget(
+                    value: displaySeconds.toString().padLeft(2, '0'),
+                    label: 'SECS',
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -110,16 +126,10 @@ class StreakCounterWidget extends ConsumerWidget {
   }
 
   Widget _buildDivider(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: context.h(14)),
-      child: Text(
-        ":",
-        style: TextStyle(
-          fontSize: context.sp(22),
-          fontWeight: FontWeight.w700,
-          color: AppColors.textMuted,
-        ),
-      ),
+    return Container(
+      width: 1,
+      margin: EdgeInsets.symmetric(vertical: context.h(6)),
+      color: AppColors.border,
     );
   }
 }

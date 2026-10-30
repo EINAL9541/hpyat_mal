@@ -10,9 +10,9 @@ class DailyNourishCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Craving SOS Emergency Card
-    return GestureDetector(
+    return InkWell(
       onTap: () => context.go('/breathing'),
+      borderRadius: context.borderRadius(all: 12),
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.symmetric(
@@ -20,68 +20,63 @@ class DailyNourishCardWidget extends StatelessWidget {
           vertical: context.h(14),
         ),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [
-              Color(0xFFFFF7ED),
-              Color(0xFFFFEDD5),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: context.borderRadius(all: 18),
-          border: Border.all(
-            color: const Color(0xFFFDBA74),
-            width: 1.2,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.amberWarm.withValues(alpha: 0.1),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          color: AppColors.surfaceCard,
+          borderRadius: context.borderRadius(all: 12),
+          border: Border.all(color: AppColors.borderSubtle),
+          boxShadow: AppColors.cardShadow,
         ),
         child: Row(
           children: [
             Container(
-              width: context.w(44),
-              height: context.h(44),
+              width: context.w(38),
+              height: context.w(38),
               decoration: BoxDecoration(
-                color: AppColors.amberWarm,
+                color: AppColors.leafSoft,
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 LucideIcons.wind,
-                color: AppColors.baseWhite,
-                size: context.w(22),
+                color: AppColors.forestPrimary,
+                size: context.w(18),
               ),
             ),
-            SizedBox(width: context.w(14)),
+            SizedBox(width: context.w(12)),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Having a Craving Right Now?",
-                    style: AppTextStyle.headingSmall(context).copyWith(
-                      color: const Color(0xFF9A3412),
-                      fontSize: 15,
+                    "Feeling a craving right now?",
+                    style: AppTextStyle.bodySemiBold(context).copyWith(
+                      color: AppColors.forestDeep,
+                      fontSize: 14.5,
                     ),
                   ),
                   SizedBox(height: context.h(2)),
                   Text(
-                    "Cravings peak in 3 minutes. Tap for guided calming breath.",
-                    style: AppTextStyle.captionMedium(context).copyWith(
-                      color: const Color(0xFFC2410C),
+                    "Urges pass in 3 minutes. Take a guided 4-7-8 breath.",
+                    style: AppTextStyle.captionSmall(context).copyWith(
+                      color: AppColors.textSecondary,
                     ),
                   ),
                 ],
               ),
             ),
-            Icon(
-              LucideIcons.chevronRight,
-              color: const Color(0xFF9A3412),
-              size: context.w(20),
+            SizedBox(width: context.w(8)),
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: context.w(10),
+                vertical: context.h(6),
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.emerald,
+                borderRadius: context.borderRadius(all: 50),
+              ),
+              child: Icon(
+                LucideIcons.arrowRight,
+                color: AppColors.baseWhite,
+                size: context.w(15),
+              ),
             ),
           ],
         ),

@@ -23,7 +23,7 @@ class AppMetricCardWidget extends StatelessWidget {
     this.backgroundColor,
     this.borderColor,
     this.padding,
-    this.borderRadius = 16,
+    this.borderRadius = 12,
     this.onTap,
   });
 
@@ -32,20 +32,14 @@ class AppMetricCardWidget extends StatelessWidget {
     final card = Container(
       padding: padding ??
           EdgeInsets.symmetric(
-            horizontal: context.w(10),
-            vertical: context.h(12),
+            horizontal: context.w(12),
+            vertical: context.h(14),
           ),
       decoration: BoxDecoration(
         color: backgroundColor ?? AppColors.surfaceCard,
         borderRadius: context.borderRadius(all: borderRadius),
-        border: Border.all(color: borderColor ?? AppColors.border),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.forestDeep.withValues(alpha: 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        border: Border.all(color: borderColor ?? AppColors.borderSubtle),
+        boxShadow: AppColors.cardShadow,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -63,6 +57,7 @@ class AppMetricCardWidget extends StatelessWidget {
             style: AppTextStyle.headingSmall(context).copyWith(
               color: AppColors.forestDeep,
               fontWeight: FontWeight.w700,
+              fontFeatures: const [FontFeature.tabularFigures()],
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

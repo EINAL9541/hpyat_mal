@@ -16,31 +16,27 @@ class TimeUnitWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: context.w(12),
-            vertical: context.h(8),
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.leafBackground,
-            borderRadius: context.borderRadius(all: 12),
-            border: Border.all(color: AppColors.borderSubtle),
-          ),
-          child: Text(
-            value,
-            style: AppTextStyle.headingLarge(context).copyWith(
-              color: AppColors.forestDeep,
-              fontWeight: FontWeight.w800,
-            ),
+        Text(
+          value,
+          style: AppTextStyle.headingLarge(context).copyWith(
+            color: AppColors.forestDeep,
+            fontSize: 28,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.5,
+            height: 1.15,
+            fontFeatures: const [FontFeature.tabularFigures()],
           ),
         ),
-        SizedBox(height: context.h(4)),
+        SizedBox(height: context.h(3)),
         Text(
           label,
           style: AppTextStyle.captionSmall(context).copyWith(
+            color: AppColors.textMuted,
             fontWeight: FontWeight.w700,
-            letterSpacing: 0.8,
+            fontSize: 10.5,
+            letterSpacing: 0.9,
           ),
         ),
       ],

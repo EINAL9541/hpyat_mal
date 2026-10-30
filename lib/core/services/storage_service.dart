@@ -49,6 +49,7 @@ class WishlistItem {
   final String title;
   final double targetAmount;
   final String iconKey;
+  final String? imagePath;
   final bool isCompleted;
 
   const WishlistItem({
@@ -56,6 +57,7 @@ class WishlistItem {
     required this.title,
     required this.targetAmount,
     required this.iconKey,
+    this.imagePath,
     this.isCompleted = false,
   });
 
@@ -64,6 +66,7 @@ class WishlistItem {
         'title': title,
         'targetAmount': targetAmount,
         'iconKey': iconKey,
+        'imagePath': imagePath,
         'isCompleted': isCompleted,
       };
 
@@ -72,14 +75,24 @@ class WishlistItem {
         title: json['title'] as String,
         targetAmount: (json['targetAmount'] as num).toDouble(),
         iconKey: (json['iconKey'] as String?) ?? 'gift',
+        imagePath: json['imagePath'] as String?,
         isCompleted: (json['isCompleted'] as bool?) ?? false,
       );
 
-  WishlistItem copyWith({bool? isCompleted}) => WishlistItem(
+  WishlistItem copyWith({
+    String? title,
+    double? targetAmount,
+    String? iconKey,
+    String? imagePath,
+    bool clearImagePath = false,
+    bool? isCompleted,
+  }) =>
+      WishlistItem(
         id: id,
-        title: title,
-        targetAmount: targetAmount,
-        iconKey: iconKey,
+        title: title ?? this.title,
+        targetAmount: targetAmount ?? this.targetAmount,
+        iconKey: iconKey ?? this.iconKey,
+        imagePath: clearImagePath ? null : (imagePath ?? this.imagePath),
         isCompleted: isCompleted ?? this.isCompleted,
       );
 }
@@ -231,20 +244,51 @@ class StorageService {
   }
 
   // Wishlist
+  static bool _isLegacySeedGoal(WishlistItem item) {
+    return (item.id == '1' && item.title == 'Premium Running Shoes') ||
+        (item.id == '2' && item.title == 'Weekend Cabin Trip') ||
+        (item.id == '3' && item.title == 'Noise Cancelling Earbuds');
+  }
+
   List<WishlistItem> getWishlist() {
     final rawList = _prefs.getStringList(_keyWishlist);
     if (rawList == null || rawList.isEmpty) {
-      return _initialDefaultWishlist();
+      return [];
     }
-    return rawList
+    final items = rawList
         .map((str) =>
             WishlistItem.fromJson(jsonDecode(str) as Map<String, dynamic>))
         .toList();
+    final filtered = items.where((item) => !_isLegacySeedGoal(item)).toList();
+    if (filtered.length != items.length) {
+      _prefs.setStringList(
+        _keyWishlist,
+        filtered.map((e) => jsonEncode(e.toJson())).toList(),
+      );
+    }
+    return filtered;
   }
 
   Future<void> saveWishlistItem(WishlistItem item) async {
     final items = getWishlist();
-    items.add(item);
+    items.insert(0, item);
+    final rawList = items.map((e) => jsonEncode(e.toJson())).toList();
+    await _prefs.setStringList(_keyWishlist, rawList);
+  }
+
+  Future<void> updateWishlistItem(WishlistItem updatedItem) async {
+    final items = getWishlist().map((item) {
+      if (item.id == updatedItem.id) {
+        return updatedItem;
+      }
+      return item;
+    }).toList();
+    final rawList = items.map((e) => jsonEncode(e.toJson())).toList();
+    await _prefs.setStringList(_keyWishlist, rawList);
+  }
+
+  Future<void> deleteWishlistItem(String id) async {
+    final items = getWishlist().where((item) => item.id != id).toList();
     final rawList = items.map((e) => jsonEncode(e.toJson())).toList();
     await _prefs.setStringList(_keyWishlist, rawList);
   }
@@ -286,29 +330,6 @@ class StorageService {
         intensity: 4,
         resisted: true,
         note: 'Switched coffee to green herbal tea.',
-      ),
-    ];
-  }
-
-  List<WishlistItem> _initialDefaultWishlist() {
-    return [
-      const WishlistItem(
-        id: '1',
-        title: 'Premium Running Shoes',
-        targetAmount: 45000.0,
-        iconKey: 'footprints',
-      ),
-      const WishlistItem(
-        id: '2',
-        title: 'Weekend Cabin Trip',
-        targetAmount: 120000.0,
-        iconKey: 'mountain',
-      ),
-      const WishlistItem(
-        id: '3',
-        title: 'Noise Cancelling Earbuds',
-        targetAmount: 35000.0,
-        iconKey: 'headphones',
       ),
     ];
   }

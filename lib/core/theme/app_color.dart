@@ -17,7 +17,8 @@ enum PlantThemeType {
   }
 }
 
-/// Immutable color token set for each plant theme.
+/// Immutable color token set for each plant theme, calibrated to the
+/// Starbucks 4-tier botanical & warm-cream design system (see DESIGN.md).
 class AppThemePalette {
   final Color forestDeep;
   final Color forestPrimary;
@@ -89,72 +90,72 @@ class AppThemePalette {
     required this.successSoft,
   });
 
-  /// Classic Emerald Forest theme (Green Tree)
+  /// Theme 1: Emerald Forest — Classic Starbucks 4-tier green & warm cream canvas
   static const AppThemePalette emeraldForest = AppThemePalette(
-    forestDeep: Color(0xFF0F291E),
-    forestPrimary: Color(0xFF1B4D3E),
-    forestMedium: Color(0xFF2D6A4F),
-    emerald: Color(0xFF40916C),
-    mintAccent: Color(0xFF52B788),
-    sageLight: Color(0xFF74C69D),
-    leafSoft: Color(0xFFD8F3DC),
-    leafBackground: Color(0xFFF2F9F5),
-    amberWarm: Color(0xFFE08A2B),
-    amberLight: Color(0xFFFEF3C7),
-    barkBrown: Color(0xFF5C4033),
-    skyMist: Color(0xFFE3F2FD),
-    skySoft: Color(0xFF90CAF9),
-    surface: Color(0xFFF9FBFA),
-    surfaceCard: Color(0xFFFFFFFF),
-    surfaceCardMuted: Color(0xFFF4F7F5),
-    border: Color(0xFFE2EBE5),
-    borderSubtle: Color(0xFFEDF2EF),
+    forestDeep: Color(0xFF1E3932), // House Green (deep feature bands & hero numbers)
+    forestPrimary: Color(0xFF006241), // Starbucks Green (brand headings & active nav)
+    forestMedium: Color(0xFF2B5148), // Green Uplift (secondary dark-surface tone)
+    emerald: Color(0xFF00754A), // Green Accent (primary filled pill CTAs & rings)
+    mintAccent: Color(0xFF3D9970), // Luminous botanical highlight
+    sageLight: Color(0xFF6B9E88), // Muted botanical sage
+    leafSoft: Color(0xFFD4E9E2), // Green Light (soft badge & valid-field wash)
+    leafBackground: Color(0xFFEBF4F0), // Whisper green tint
+    amberWarm: Color(0xFFCBA258), // Rewards Gold (reserved for ceremony/milestones)
+    amberLight: Color(0xFFFAF6EE), // Gold Lightest (warm cream-gold ceremony wash)
+    barkBrown: Color(0xFF4E3629), // Espresso earth
+    skyMist: Color(0xFFF9F9F9), // Neutral Cool utility surface
+    skySoft: Color(0xFFDFC49D), // Gold Light border ring
+    surface: Color(0xFFF2F0EB), // Neutral Warm cream canvas
+    surfaceCard: Color(0xFFFFFFFF), // Pure white card surface
+    surfaceCardMuted: Color(0xFFEDEBE9), // Ceramic secondary zone
+    border: Color(0xFFDFDCD5), // Warm hairline border
+    borderSubtle: Color(0xFFE8E5DF), // Soft internal hairline
     baseWhite: Color(0xFFFFFFFF),
-    baseBlack: Color(0xFF14241D),
-    textPrimary: Color(0xFF14241D),
-    textSecondary: Color(0xFF3D554B),
-    textMuted: Color(0xFF566E63),
+    baseBlack: Color(0xFF1F1F1F), // Warm 87% Text Black
+    textPrimary: Color(0xFF1F1F1F), // Warm 87% Text Black
+    textSecondary: Color(0xFF33433D), // Rewards Green muted slate
+    textMuted: Color(0xFF6B6A65), // 58% Text Black Soft
     textLight: Color(0xFFFFFFFF),
-    danger: Color(0xFFE55353),
-    dangerSoft: Color(0xFFFDE8E8),
-    warning: Color(0xFFF59E0B),
-    warningSoft: Color(0xFFFEF3C7),
-    success: Color(0xFF2E7D32),
-    successSoft: Color(0xFFE8F5E9),
+    danger: Color(0xFFC82014), // Starbucks Red
+    dangerSoft: Color(0xFFFBE9E7),
+    warning: Color(0xFFD99B26),
+    warningSoft: Color(0xFFFEF6E6),
+    success: Color(0xFF00754A),
+    successSoft: Color(0xFFD4E9E2),
   );
 
-  /// Soft Sakura Pink & Rosewood theme (Cherry Blossom Tree)
+  /// Theme 2: Cherry Blossom — Sakura Reserve calibrated to Starbucks 4-tier tone
   static const AppThemePalette cherryBlossom = AppThemePalette(
-    forestDeep: Color(0xFF3B1224),
-    forestPrimary: Color(0xFF9C2D56),
-    forestMedium: Color(0xFFB83B68),
-    emerald: Color(0xFFD85A88),
-    mintAccent: Color(0xFFF080A8),
-    sageLight: Color(0xFFF7A8C4),
-    leafSoft: Color(0xFFFCE4EE),
-    leafBackground: Color(0xFFFDF2F6),
-    amberWarm: Color(0xFFE07A45),
-    amberLight: Color(0xFFFFF0E5),
-    barkBrown: Color(0xFF5E3A3E),
-    skyMist: Color(0xFFFDF0F5),
-    skySoft: Color(0xFFF7B2C9),
-    surface: Color(0xFFFCF8FA),
-    surfaceCard: Color(0xFFFFFFFF),
-    surfaceCardMuted: Color(0xFFF8EFF3),
-    border: Color(0xFFEEDCE3),
-    borderSubtle: Color(0xFFF6ECF0),
+    forestDeep: Color(0xFF381824), // Sakura House Reserve (deep rosewood-plum band)
+    forestPrimary: Color(0xFF8C234B), // Sakura Brand Crimson (headings & active nav)
+    forestMedium: Color(0xFF5E2A3D), // Sakura Uplift (mid-dark rosewood)
+    emerald: Color(0xFFA8325D), // Sakura Accent Rose (primary filled pill CTAs & rings)
+    mintAccent: Color(0xFFC85A82), // Luminous sakura highlight
+    sageLight: Color(0xFFD88AA6), // Muted petal rose
+    leafSoft: Color(0xFFF3DCE4), // Sakura Light (soft badge & selected wash)
+    leafBackground: Color(0xFFF9EFF3), // Whisper sakura tint
+    amberWarm: Color(0xFFCBA258), // Rewards Gold (reserved for ceremony/milestones)
+    amberLight: Color(0xFFFAF6EE), // Gold Lightest (warm cream-gold ceremony wash)
+    barkBrown: Color(0xFF54343A), // Warm rosewood bark
+    skyMist: Color(0xFFFAF8F9), // Neutral Cool utility surface
+    skySoft: Color(0xFFDFC49D), // Gold Light border ring
+    surface: Color(0xFFF5F0F1), // Warm Rose-Cream canvas
+    surfaceCard: Color(0xFFFFFFFF), // Pure white card surface
+    surfaceCardMuted: Color(0xFFEFEAEC), // Sakura Ceramic secondary zone
+    border: Color(0xFFE6DFE1), // Warm hairline border
+    borderSubtle: Color(0xFFEFEAEB), // Soft internal hairline
     baseWhite: Color(0xFFFFFFFF),
-    baseBlack: Color(0xFF2B101C),
-    textPrimary: Color(0xFF2B101C),
-    textSecondary: Color(0xFF633B4D),
-    textMuted: Color(0xFF7D5667),
+    baseBlack: Color(0xFF241A1E), // Warm 87% Ink
+    textPrimary: Color(0xFF241A1E), // Warm 87% Ink
+    textSecondary: Color(0xFF4E3840), // Muted rose-slate secondary text
+    textMuted: Color(0xFF75686C), // 58% Soft Ink
     textLight: Color(0xFFFFFFFF),
-    danger: Color(0xFFE55353),
-    dangerSoft: Color(0xFFFDE8E8),
-    warning: Color(0xFFF59E0B),
-    warningSoft: Color(0xFFFEF3C7),
-    success: Color(0xFF9C2D56),
-    successSoft: Color(0xFFFCE4EE),
+    danger: Color(0xFFC82014), // Starbucks Red
+    dangerSoft: Color(0xFFFBE9E7),
+    warning: Color(0xFFD99B26),
+    warningSoft: Color(0xFFFEF6E6),
+    success: Color(0xFF8C234B),
+    successSoft: Color(0xFFF3DCE4),
   );
 }
 
@@ -176,7 +177,7 @@ class AppColors {
       ? AppThemePalette.cherryBlossom
       : AppThemePalette.emeraldForest;
 
-  // Semantic Sanctuary Tones (Green in Emerald mode, Sakura Pink in Cherry mode)
+  // Semantic Sanctuary Tones (4-tier Starbucks Green in Emerald mode, Sakura Reserve in Cherry mode)
   static Color get forestDeep => palette.forestDeep;
   static Color get forestPrimary => palette.forestPrimary;
   static Color get forestMedium => palette.forestMedium;
@@ -186,16 +187,16 @@ class AppColors {
   static Color get leafSoft => palette.leafSoft;
   static Color get leafBackground => palette.leafBackground;
 
-  // Warm Amber & Earth Accents
+  // Rewards Gold & Earth Accents
   static Color get amberWarm => palette.amberWarm;
   static Color get amberLight => palette.amberLight;
   static Color get barkBrown => palette.barkBrown;
 
-  // Calming Sky & Mist
+  // Utility & Gold Ring Accents
   static Color get skyMist => palette.skyMist;
   static Color get skySoft => palette.skySoft;
 
-  // Neutral Foundations
+  // Warm Cream & Ceramic Foundations
   static Color get surface => palette.surface;
   static Color get surfaceCard => palette.surfaceCard;
   static Color get surfaceCardMuted => palette.surfaceCardMuted;
@@ -213,10 +214,38 @@ class AppColors {
   static const Color textLight = Color(0xFFFFFFFF);
 
   // Status & Feedback
-  static const Color danger = Color(0xFFE55353);
-  static const Color dangerSoft = Color(0xFFFDE8E8);
-  static const Color warning = Color(0xFFF59E0B);
-  static const Color warningSoft = Color(0xFFFEF3C7);
+  static const Color danger = Color(0xFFC82014);
+  static const Color dangerSoft = Color(0xFFFBE9E7);
+  static const Color warning = Color(0xFFD99B26);
+  static const Color warningSoft = Color(0xFFFEF6E6);
   static Color get success => palette.success;
   static Color get successSoft => palette.successSoft;
+
+  /// Whisper-soft dual-layer card shadow from DESIGN.md
+  static List<BoxShadow> get cardShadow => [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.04),
+          blurRadius: 1,
+          offset: const Offset(0, 0.5),
+        ),
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.06),
+          blurRadius: 8,
+          offset: const Offset(0, 2),
+        ),
+      ];
+
+  /// Layered ambient shadow for floating pill/circular CTAs and bottom nav
+  static List<BoxShadow> get floatingShadow => [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.12),
+          blurRadius: 6,
+          offset: Offset.zero,
+        ),
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.10),
+          blurRadius: 14,
+          offset: const Offset(0, 6),
+        ),
+      ];
 }

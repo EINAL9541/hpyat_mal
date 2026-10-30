@@ -17,15 +17,9 @@ class SettingsGroupCardWidget extends StatelessWidget {
       clipBehavior: .antiAlias,
       decoration: BoxDecoration(
         color: AppColors.surfaceCard,
-        borderRadius: context.borderRadius(all: 20),
-        border: Border.all(color: AppColors.border, width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.forestDeep.withValues(alpha: 0.04),
-            blurRadius: 14,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        borderRadius: context.borderRadius(all: 12),
+        border: Border.all(color: AppColors.borderSubtle, width: 1),
+        boxShadow: AppColors.cardShadow,
       ),
       child: Column(
         mainAxisSize: .min,

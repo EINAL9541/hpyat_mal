@@ -19,13 +19,13 @@ class CurrencyDropdownWidget extends ConsumerWidget {
 
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: context.w(10),
-        vertical: context.h(4),
+        horizontal: context.w(12),
+        vertical: context.h(5),
       ),
       decoration: BoxDecoration(
-        color: AppColors.leafBackground,
-        borderRadius: context.borderRadius(all: 10),
-        border: Border.all(color: AppColors.border),
+        color: AppColors.leafSoft,
+        borderRadius: context.borderRadius(all: 50),
+        border: Border.all(color: AppColors.borderSubtle),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
@@ -40,7 +40,7 @@ class CurrencyDropdownWidget extends ConsumerWidget {
           ),
           isDense: true,
           dropdownColor: AppColors.surfaceCard,
-          borderRadius: context.borderRadius(all: 14),
+          borderRadius: context.borderRadius(all: 12),
           menuMaxHeight: context.h(360),
           items: AppCurrency.allCurrencies.map((c) {
             final isSelected = c.code == forest.currency.code;

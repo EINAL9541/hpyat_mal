@@ -21,19 +21,13 @@ class LanguageSwitchButton extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(context.w(3)),
       decoration: BoxDecoration(
-        color: AppColors.surfaceCard.withValues(alpha: 0.9),
-        borderRadius: context.borderRadius(all: 20),
+        color: AppColors.surfaceCard,
+        borderRadius: context.borderRadius(all: 50),
         border: Border.all(
           color: AppColors.border,
           width: 1,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.forestDeep.withValues(alpha: 0.06),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        boxShadow: AppColors.cardShadow,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -76,12 +70,12 @@ class LanguageSwitchButton extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         padding: EdgeInsets.symmetric(
-          horizontal: context.w(isCompact ? 8 : 10),
+          horizontal: context.w(isCompact ? 9 : 11),
           vertical: context.h(4),
         ),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.forestPrimary : Colors.transparent,
-          borderRadius: context.borderRadius(all: 14),
+          color: isSelected ? AppColors.emerald : Colors.transparent,
+          borderRadius: context.borderRadius(all: 50),
         ),
         child: Text(
           label,

@@ -37,11 +37,11 @@ class SettingsGroupItemWidget extends StatelessWidget {
               height: context.h(40),
               decoration: BoxDecoration(
                 color: AppColors.leafSoft,
-                borderRadius: context.borderRadius(all: 12),
+                shape: BoxShape.circle,
               ),
               child: Icon(
                 icon,
-                size: context.w(20),
+                size: context.w(18),
                 color: AppColors.forestPrimary,
               ),
             ),

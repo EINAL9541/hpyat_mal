@@ -21,93 +21,73 @@ class ForestHeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isCherry = plantTheme.isCherry;
+    final isThriving = vitality >= 80;
+    final statusColor = isThriving ? AppColors.emerald : AppColors.amberWarm;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // Left: App Identity & Vitality
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                userName.isNotEmpty ? "Hi, $userName" : "Your Sanctuary",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyle.headingLarge(context).copyWith(
+                  color: AppColors.forestPrimary,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: context.h(2)),
               Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Flexible(
-                    child: Text(
-                      "Hi, $userName",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTextStyle.headingMedium(context).copyWith(
-                        color: AppColors.forestDeep,
-                      ),
+                  Container(
+                    width: context.w(7),
+                    height: context.w(7),
+                    decoration: BoxDecoration(
+                      color: statusColor,
+                      shape: BoxShape.circle,
                     ),
                   ),
                   SizedBox(width: context.w(6)),
-                  Image.asset(
-                    isCherry
-                        ? "assets/images/cherry_blossom.png"
-                        : "assets/images/deciduous_tree.png",
-                    width: context.w(20),
-                    height: context.w(20),
-                    fit: BoxFit.contain,
+                  Text(
+                    isThriving
+                        ? "${isCherry ? 'Sakura Sanctuary' : 'Emerald Sanctuary'} • $vitality% Vitality"
+                        : "Recovering • $vitality% Vitality",
+                    style: AppTextStyle.captionSmall(context).copyWith(
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ],
-              ),
-              SizedBox(height: context.h(2)),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: context.w(8),
-                  vertical: context.h(3),
-                ),
-                decoration: BoxDecoration(
-                  color: vitality >= 80
-                      ? AppColors.leafSoft
-                      : AppColors.warningSoft,
-                  borderRadius: context.borderRadius(all: 8),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      vitality >= 80
-                          ? (isCherry ? LucideIcons.flower2 : LucideIcons.leaf)
-                          : LucideIcons.cloudFog,
-                      size: context.w(12),
-                      color: vitality >= 80
-                          ? AppColors.forestPrimary
-                          : AppColors.amberWarm,
-                    ),
-                    SizedBox(width: context.w(4)),
-                    Text(
-                      vitality >= 80
-                          ? "${isCherry ? 'Sakura' : 'Emerald'} • $vitality% Vital"
-                          : "Recovering • $vitality% Vital",
-                      style: AppTextStyle.captionSmall(context).copyWith(
-                        color: vitality >= 80
-                            ? AppColors.forestPrimary
-                            : AppColors.amberWarm,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
               ),
             ],
           ),
         ),
-
-        // Right side of "Hi, Name": Settings Button
-        IconButton(
-          onPressed: onOpenSettings,
-          icon: Icon(
-            LucideIcons.settings,
-            size: context.w(21),
-            color: AppColors.forestPrimary,
+        Container(
+          decoration: BoxDecoration(
+            color: AppColors.surfaceCard,
+            shape: BoxShape.circle,
+            border: Border.all(color: AppColors.borderSubtle),
+            boxShadow: AppColors.cardShadow,
           ),
-          style: IconButton.styleFrom(
-            backgroundColor: AppColors.surfaceCard,
-            padding: EdgeInsets.all(context.w(10)),
-            side: BorderSide(color: AppColors.border),
+          child: IconButton(
+            onPressed: onOpenSettings,
+            icon: Icon(
+              LucideIcons.slidersHorizontal,
+              size: context.w(18),
+              color: AppColors.forestDeep,
+            ),
+            constraints: BoxConstraints.tightFor(
+              width: context.w(40),
+              height: context.w(40),
+            ),
+            padding: EdgeInsets.zero,
           ),
         ),
       ],

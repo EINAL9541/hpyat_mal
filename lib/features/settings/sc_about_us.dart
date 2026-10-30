@@ -43,29 +43,30 @@ class AboutUsScreen extends StatelessWidget {
           child: Divider(
             height: 1,
             thickness: 1,
-            color: AppColors.border.withValues(alpha: 0.65),
+            color: AppColors.borderSubtle,
           ),
         ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.fromLTRB(
-            context.w(20),
+            context.w(16),
             context.h(16),
-            context.w(20),
+            context.w(16),
             context.h(32),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             spacing: context.h(16),
             children: [
-              // 1. Hero Card: Logo on light circle, brand name, 2-line tagline, version badge
+              // 1. Solid House Band Hero Card (#1E3932 / #381824)
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.all(context.w(20)),
                 decoration: BoxDecoration(
-                  color: AppColors.forestPrimary,
-                  borderRadius: context.borderRadius(all: 22),
+                  color: AppColors.forestDeep,
+                  borderRadius: context.borderRadius(all: 16),
+                  boxShadow: AppColors.cardShadow,
                 ),
                 child: Column(
                   children: [
@@ -74,15 +75,9 @@ class AboutUsScreen extends StatelessWidget {
                       height: context.w(66),
                       padding: EdgeInsets.all(context.w(10)),
                       decoration: BoxDecoration(
-                        color: AppColors.leafBackground,
+                        color: AppColors.surfaceCard,
                         shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.forestDeep.withValues(alpha: 0.16),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
+                        boxShadow: AppColors.cardShadow,
                       ),
                       child: Image.asset(
                         "assets/images/app_icon_transparent.png",
@@ -108,28 +103,30 @@ class AboutUsScreen extends StatelessWidget {
                           textAlign: TextAlign.center,
                           maxLines: 2,
                           style: AppTextStyle.captionMedium(context).copyWith(
-                            color: AppColors.leafSoft,
+                            color: AppColors.baseWhite.withValues(alpha: 0.72),
                             height: 1.55,
                           ),
                         ),
                       ),
                     ),
                     SizedBox(height: context.h(10)),
+                    // Gold-outlined version pill
                     Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: context.w(14),
-                        vertical: context.h(5),
+                        vertical: context.h(4),
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.baseWhite.withValues(alpha: 0.16),
-                        borderRadius: context.borderRadius(all: 14),
+                        color: Colors.transparent,
+                        borderRadius: context.borderRadius(all: 50),
+                        border: Border.all(color: AppColors.amberWarm),
                       ),
                       child: Text(
-                        LocaleKeys.splash_version.tr(),
+                        "★ ${LocaleKeys.splash_version.tr()}",
                         style: AppTextStyle.captionMedium(context).copyWith(
-                          color: AppColors.baseWhite,
+                          color: AppColors.amberWarm,
                           fontWeight: FontWeight.w700,
-                          fontSize: 13.5,
+                          fontSize: 13,
                         ),
                       ),
                     ),
@@ -137,7 +134,7 @@ class AboutUsScreen extends StatelessWidget {
                 ),
               ),
 
-              // 2. Three Core Pillars (No duplicated links or popups)
+              // 2. Three Core Pillars
               Column(
                 spacing: context.h(12),
                 children: [
@@ -159,7 +156,7 @@ class AboutUsScreen extends StatelessWidget {
                 ],
               ),
 
-              // 3. Soft-tinted medical disclaimer banner with icon
+              // 3. Gold Lightest (#FAF6EE) Medical Disclaimer Banner
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(
@@ -167,11 +164,9 @@ class AboutUsScreen extends StatelessWidget {
                   vertical: context.h(14),
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.leafBackground,
-                  borderRadius: context.borderRadius(all: 18),
-                  border: Border.all(
-                    color: AppColors.emerald.withValues(alpha: 0.25),
-                  ),
+                  color: AppColors.amberLight,
+                  borderRadius: context.borderRadius(all: 12),
+                  border: Border.all(color: AppColors.skySoft),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,7 +176,7 @@ class AboutUsScreen extends StatelessWidget {
                       child: Icon(
                         LucideIcons.info,
                         size: context.w(18),
-                        color: AppColors.forestPrimary,
+                        color: AppColors.forestDeep,
                       ),
                     ),
                     SizedBox(width: context.w(12)),
@@ -189,9 +184,9 @@ class AboutUsScreen extends StatelessWidget {
                       child: Text(
                         LocaleKeys.settings_aboutMedicalDisclaimer.tr(),
                         style: AppTextStyle.captionMedium(context).copyWith(
-                          color: AppColors.forestDeep.withValues(alpha: 0.85),
+                          color: AppColors.textSecondary,
                           fontSize: 13,
-                          height: 1.6,
+                          height: 1.55,
                         ),
                       ),
                     ),

@@ -3,6 +3,8 @@ import 'package:hpyat_mal/core/extensions/context_extensions.dart';
 import 'package:hpyat_mal/core/theme/app_color.dart';
 import 'package:hpyat_mal/core/theme/app_text_style.dart';
 
+/// Solid color-block House Feature Band Card (Starbucks #1E3932 / Sakura #381824)
+/// following DESIGN.md ("No gradient system — surfaces are solid color-block").
 class AppHeroCardWidget extends StatelessWidget {
   final List<Color>? gradientColors;
   final Widget? leading;
@@ -27,35 +29,23 @@ class AppHeroCardWidget extends StatelessWidget {
     this.trailing,
     this.child,
     this.padding,
-    this.borderRadius = 22,
+    this.borderRadius = 16,
     this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final colors = gradientColors ??
-        [
-          AppColors.forestDeep,
-          AppColors.forestPrimary,
-        ];
+    final backgroundColor = (gradientColors != null && gradientColors!.isNotEmpty)
+        ? gradientColors!.first
+        : AppColors.forestDeep;
 
     final card = Container(
       width: double.infinity,
       padding: padding ?? EdgeInsets.all(context.w(18)),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: colors,
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: backgroundColor,
         borderRadius: context.borderRadius(all: borderRadius),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.forestDeep.withValues(alpha: 0.14),
-            blurRadius: 18,
-            offset: const Offset(0, 6),
-          ),
-        ],
+        boxShadow: AppColors.cardShadow,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,14 +77,14 @@ class AppHeroCardWidget extends StatelessWidget {
               subtitle!,
               style: subtitleStyle ??
                   AppTextStyle.bodyMedium(context).copyWith(
-                    color: AppColors.leafSoft,
-                    fontSize: 13,
+                    color: AppColors.baseWhite.withValues(alpha: 0.72),
+                    fontSize: 13.5,
                     height: 1.5,
                   ),
             ),
           ],
           if (child != null) ...[
-            if (title != null || subtitle != null) SizedBox(height: context.h(12)),
+            if (title != null || subtitle != null) SizedBox(height: context.h(14)),
             child!,
           ],
         ],

@@ -16,7 +16,6 @@ class FeedbackScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     EasyLocalization.of(context);
-    final selectedRating = useState<int>(5);
     final selectedCategoryIndex = useState<int>(0);
     final messageController = useTextEditingController();
     useListenable(messageController);
@@ -58,7 +57,7 @@ class FeedbackScreen extends HookWidget {
           backgroundColor: AppColors.forestPrimary,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
-            borderRadius: context.borderRadius(all: 14),
+            borderRadius: context.borderRadius(all: 12),
           ),
         ),
       );
@@ -95,66 +94,13 @@ class FeedbackScreen extends HookWidget {
             Expanded(
               child: SingleChildScrollView(
                 padding: EdgeInsets.symmetric(
-                  horizontal: context.w(22),
+                  horizontal: context.w(16),
                   vertical: context.h(14),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // 1. Star Rating Card
-                    Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.all(context.w(18)),
-                      decoration: BoxDecoration(
-                        color: AppColors.surfaceCard,
-                        borderRadius: context.borderRadius(all: 18),
-                        border: Border.all(color: AppColors.border),
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            LocaleKeys.settings_feedbackRateQuestion.tr(),
-                            textAlign: TextAlign.center,
-                            style: AppTextStyle.bodySemiBold(context).copyWith(
-                              color: AppColors.forestDeep,
-                              fontSize: 15,
-                              height: 1.6,
-                            ),
-                          ),
-                          SizedBox(height: context.h(12)),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(5, (index) {
-                              final starNumber = index + 1;
-                              final isFilled =
-                                  starNumber <= selectedRating.value;
-                              return GestureDetector(
-                                onTap: () {
-                                  HapticFeedback.selectionClick();
-                                  selectedRating.value = starNumber;
-                                },
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: context.w(6),
-                                  ),
-                                  child: Icon(
-                                    LucideIcons.star,
-                                    size: context.w(30),
-                                    color: isFilled
-                                        ? AppColors.amberWarm
-                                        : AppColors.border,
-                                  ),
-                                ),
-                              );
-                            }),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    SizedBox(height: context.h(18)),
-
-                    // 2. Category Selector
+                    // 2. Category Selector (50px Full-Pill Chips)
                     Text(
                       LocaleKeys.settings_feedbackCategoryLabel.tr(),
                       style: AppTextStyle.bodySemiBold(context).copyWith(
@@ -181,12 +127,12 @@ class FeedbackScreen extends HookWidget {
                             ),
                             decoration: BoxDecoration(
                               color: isSelected
-                                  ? AppColors.forestPrimary
+                                  ? AppColors.emerald
                                   : AppColors.surfaceCard,
-                              borderRadius: context.borderRadius(all: 20),
+                              borderRadius: context.borderRadius(all: 50),
                               border: Border.all(
                                 color: isSelected
-                                    ? AppColors.forestPrimary
+                                    ? AppColors.emerald
                                     : AppColors.border,
                               ),
                             ),
@@ -209,13 +155,13 @@ class FeedbackScreen extends HookWidget {
 
                     SizedBox(height: context.h(18)),
 
-                    // 3. Feedback Message Box
+                    // 3. Feedback Message Box (12px radius)
                     AppTextFieldWidget(
                       label: LocaleKeys.settings_feedbackMessageLabel.tr(),
                       controller: messageController,
                       maxLines: 5,
                       hintText: LocaleKeys.settings_feedbackMessageHint.tr(),
-                      borderRadius: 16,
+                      borderRadius: 12,
                       contentPadding: EdgeInsets.all(context.w(16)),
                       style: AppTextStyle.bodyMedium(context).copyWith(
                         color: AppColors.forestDeep,
@@ -233,20 +179,20 @@ class FeedbackScreen extends HookWidget {
               ),
             ),
 
-            // Fixed Bottom Submit Button
+            // Fixed Bottom Submit Button (50px Full Pill)
             Container(
               width: double.infinity,
               padding: EdgeInsets.fromLTRB(
-                context.w(22),
+                context.w(16),
                 context.h(12),
-                context.w(22),
+                context.w(16),
                 context.h(16),
               ),
               decoration: BoxDecoration(
                 color: AppColors.surface,
                 border: Border(
                   top: BorderSide(
-                    color: AppColors.border.withValues(alpha: 0.7),
+                    color: AppColors.borderSubtle,
                   ),
                 ),
               ),
@@ -265,13 +211,11 @@ class FeedbackScreen extends HookWidget {
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.forestPrimary,
+                    backgroundColor: AppColors.emerald,
                     foregroundColor: AppColors.baseWhite,
                     disabledBackgroundColor: AppColors.border,
                     disabledForegroundColor: AppColors.textMuted,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: context.borderRadius(all: 16),
-                    ),
+                    shape: const StadiumBorder(),
                     elevation: 0,
                   ),
                 ),

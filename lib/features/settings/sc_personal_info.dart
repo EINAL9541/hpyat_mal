@@ -123,7 +123,7 @@ class PersonalInfoScreen extends HookConsumerWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(
-            horizontal: context.w(22),
+            horizontal: context.w(16),
             vertical: context.h(12),
           ),
           child: Column(
@@ -133,10 +133,11 @@ class PersonalInfoScreen extends HookConsumerWidget {
                 label: LocaleKeys.settings_personalInfoNameLabel.tr(),
                 controller: nameController,
                 hintText: LocaleKeys.onboarding_nameHint.tr(),
+                borderRadius: 12,
               ),
               SizedBox(height: context.h(16)),
 
-              // Quit Date Picker Card
+              // Quit Date Picker Card (12px White Surface)
               Text(
                 LocaleKeys.onboarding_quitStartLabel.tr(),
                 style: AppTextStyle.bodySemiBold(context).copyWith(
@@ -147,7 +148,7 @@ class PersonalInfoScreen extends HookConsumerWidget {
               SizedBox(height: context.h(8)),
               InkWell(
                 onTap: pickQuitDate,
-                borderRadius: context.borderRadius(all: 14),
+                borderRadius: context.borderRadius(all: 12),
                 child: Container(
                   padding: EdgeInsets.symmetric(
                     horizontal: context.w(16),
@@ -155,8 +156,9 @@ class PersonalInfoScreen extends HookConsumerWidget {
                   ),
                   decoration: BoxDecoration(
                     color: AppColors.surfaceCard,
-                    borderRadius: context.borderRadius(all: 14),
-                    border: Border.all(color: AppColors.border, width: 1.2),
+                    borderRadius: context.borderRadius(all: 12),
+                    border: Border.all(color: AppColors.border, width: 1.0),
+                    boxShadow: AppColors.cardShadow,
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -185,6 +187,7 @@ class PersonalInfoScreen extends HookConsumerWidget {
                 controller: cigsPerDayController,
                 hintText: '15',
                 isNumber: true,
+                borderRadius: 12,
                 unit: LocaleKeys.onboarding_cigsPerDayUnit.tr(),
               ),
               SizedBox(height: context.h(16)),
@@ -194,6 +197,7 @@ class PersonalInfoScreen extends HookConsumerWidget {
                 controller: cigsPerPackController,
                 hintText: '20',
                 isNumber: true,
+                borderRadius: 12,
                 unit: LocaleKeys.onboarding_cigsPerPackUnit.tr(),
               ),
               SizedBox(height: context.h(16)),
@@ -203,6 +207,7 @@ class PersonalInfoScreen extends HookConsumerWidget {
                 controller: packCostController,
                 hintText: '3500',
                 isNumber: true,
+                borderRadius: 12,
                 unit: forest.currencyUnit(context.locale.languageCode),
               ),
               SizedBox(height: context.h(16)),
@@ -212,21 +217,21 @@ class PersonalInfoScreen extends HookConsumerWidget {
                 controller: reasonController,
                 hintText: LocaleKeys.onboarding_whyHint.tr(),
                 maxLines: 2,
+                borderRadius: 12,
               ),
 
               SizedBox(height: context.h(28)),
 
+              // 50px Full-Pill Primary Save Button
               SizedBox(
                 width: double.infinity,
                 height: context.h(52),
                 child: ElevatedButton(
                   onPressed: saveChanges,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.forestPrimary,
+                    backgroundColor: AppColors.emerald,
                     foregroundColor: AppColors.baseWhite,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: context.borderRadius(all: 16),
-                    ),
+                    shape: const StadiumBorder(),
                     elevation: 0,
                   ),
                   child: Text(

@@ -22,7 +22,7 @@ class AppStatusBadgeWidget extends StatelessWidget {
     this.backgroundColor,
     this.foregroundColor,
     this.padding,
-    this.borderRadius = 8,
+    this.borderRadius = 50,
     this.textStyle,
     this.onTap,
   });
@@ -35,7 +35,7 @@ class AppStatusBadgeWidget extends StatelessWidget {
     final badge = Container(
       padding: padding ??
           EdgeInsets.symmetric(
-            horizontal: context.w(8),
+            horizontal: context.w(10),
             vertical: context.h(4),
           ),
       decoration: BoxDecoration(

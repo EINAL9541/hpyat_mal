@@ -249,12 +249,9 @@ class _ForestCanvasWidgetState extends State<ForestCanvasWidget>
   Widget build(BuildContext context) {
     final growth = _effectiveGrowth;
     final isCherry = widget.plantTheme.isCherry;
-    final accentColor =
-        isCherry ? const Color(0xFFD84B78) : const Color(0xFF2D6A4F);
-    final borderColor =
-        isCherry ? const Color(0xFFFF8FAB) : const Color(0xFF74C69D);
-    final deepTextColor =
-        isCherry ? const Color(0xFF7A2E4D) : const Color(0xFF1B4D3E);
+    final accentColor = AppColors.emerald;
+    final borderColor = AppColors.border;
+    final deepTextColor = AppColors.forestDeep;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -262,26 +259,16 @@ class _ForestCanvasWidgetState extends State<ForestCanvasWidget>
         return GestureDetector(
           onTapDown: (details) =>
               _triggerBreeze(details.localPosition, canvasSize),
+          onLongPress: _startSpeedUpGrowth,
           child: Container(
             height: 275,
             width: double.infinity,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(28),
-              boxShadow: [
-                BoxShadow(
-                  color: accentColor.withValues(alpha: 0.12),
-                  blurRadius: 24,
-                  offset: const Offset(0, 10),
-                ),
-                BoxShadow(
-                  color: AppColors.forestDeep.withValues(alpha: 0.05),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: AppColors.cardShadow,
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(28),
+              borderRadius: BorderRadius.circular(16),
               child: Stack(
                 children: [
                   CustomPaint(
@@ -296,80 +283,49 @@ class _ForestCanvasWidgetState extends State<ForestCanvasWidget>
                     ),
                   ),
 
-                  // Top-left Speed-Up Growth Test Controls
-                  Positioned(
-                    left: 12,
-                    top: 12,
-                    right: 12,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: _startSpeedUpGrowth,
-                          child: Container(
+                  // Growth Preview Overlay Controls (only visible when long-press preview is active)
+                  if (_previewGrowthOverride != null)
+                    Positioned(
+                      left: 12,
+                      top: 12,
+                      right: 12,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 11,
-                              vertical: 6,
+                              horizontal: 12,
+                              vertical: 5,
                             ),
                             decoration: BoxDecoration(
-                              color: _isSimulatingGrowth
-                                  ? accentColor
-                                  : Colors.white.withValues(alpha: 0.85),
-                              borderRadius: BorderRadius.circular(20),
+                              color: AppColors.surfaceCard.withValues(alpha: 0.92),
+                              borderRadius: BorderRadius.circular(50),
                               border: Border.all(
-                                color: borderColor.withValues(alpha: 0.7),
+                                color: accentColor,
                               ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.06),
-                                  blurRadius: 6,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  _isSimulatingGrowth
-                                      ? Icons.fast_forward_rounded
-                                      : Icons.play_circle_fill_rounded,
-                                  size: 15,
-                                  color: _isSimulatingGrowth
-                                      ? Colors.white
-                                      : accentColor,
-                                ),
-                                const SizedBox(width: 5),
-                                Text(
-                                  _isSimulatingGrowth
-                                      ? "Growing... ${(growth * 100).toInt()}%"
-                                      : "Test Growth Speed-Up",
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w700,
-                                    color: _isSimulatingGrowth
-                                        ? Colors.white
-                                        : deepTextColor,
-                                  ),
-                                ),
-                              ],
+                            child: Text(
+                              _stageLabelForGrowth(growth),
+                              style: TextStyle(
+                                fontSize: 10.5,
+                                fontWeight: FontWeight.w700,
+                                color: deepTextColor,
+                              ),
                             ),
                           ),
-                        ),
-                        if (_previewGrowthOverride != null)
                           GestureDetector(
                             onTap: _stopPreview,
                             child: Container(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 9,
+                                horizontal: 12,
                                 vertical: 5,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.black.withValues(alpha: 0.55),
-                                borderRadius: BorderRadius.circular(16),
+                                color: AppColors.forestDeep,
+                                borderRadius: BorderRadius.circular(50),
                               ),
                               child: const Text(
-                                "✕ Reset",
+                                "✕ Exit Preview",
                                 style: TextStyle(
                                   fontSize: 10.5,
                                   fontWeight: FontWeight.w600,
@@ -378,35 +334,7 @@ class _ForestCanvasWidgetState extends State<ForestCanvasWidget>
                               ),
                             ),
                           ),
-                      ],
-                    ),
-                  ),
-
-                  // Stage Scrubber / Indicator when testing growth
-                  if (_previewGrowthOverride != null)
-                    Positioned(
-                      left: 12,
-                      bottom: 10,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.85),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: borderColor.withValues(alpha: 0.8),
-                          ),
-                        ),
-                        child: Text(
-                          _stageLabelForGrowth(growth),
-                          style: TextStyle(
-                            fontSize: 10.5,
-                            fontWeight: FontWeight.w700,
-                            color: deepTextColor,
-                          ),
-                        ),
+                        ],
                       ),
                     ),
 
@@ -418,46 +346,26 @@ class _ForestCanvasWidgetState extends State<ForestCanvasWidget>
                       child: IgnorePointer(
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
+                            horizontal: 11,
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.75),
-                            borderRadius: BorderRadius.circular(20),
+                            color: AppColors.surfaceCard.withValues(alpha: 0.85),
+                            borderRadius: BorderRadius.circular(50),
                             border: Border.all(
                               color: borderColor.withValues(alpha: 0.6),
-                              width: 1,
                             ),
                           ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              isCherry
-                                  ? Image.asset(
-                                      "assets/images/cherry_blossom.png",
-                                      width: 12,
-                                      height: 12,
-                                      fit: BoxFit.contain,
-                                    )
-                                  : Image.asset(
-                                      "assets/images/deciduous_tree.png",
-                                      width: 12,
-                                      height: 12,
-                                      fit: BoxFit.contain,
-                                    ),
-                              const SizedBox(width: 4),
-                              Text(
-                                isCherry
-                                    ? "Tap for Sakura Breeze"
-                                    : "Tap for Forest Breeze",
-                                style: TextStyle(
-                                  fontSize: 10.5,
-                                  fontWeight: FontWeight.w600,
-                                  color: deepTextColor,
-                                  letterSpacing: 0.2,
-                                ),
-                              ),
-                            ],
+                          child: Text(
+                            isCherry
+                                ? "Tap for Sakura Breeze • Hold to preview growth"
+                                : "Tap for Forest Breeze • Hold to preview growth",
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              color: deepTextColor,
+                              letterSpacing: -0.1,
+                            ),
                           ),
                         ),
                       ),

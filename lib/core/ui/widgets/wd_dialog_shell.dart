@@ -20,15 +20,17 @@ class AppDialogShellWidget extends StatelessWidget {
     required this.content,
     this.actions,
     this.padding,
-    this.borderRadius = 20,
+    this.borderRadius = 12,
   });
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: AppColors.surfaceCard,
+      surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: context.borderRadius(all: borderRadius),
+        side: BorderSide(color: AppColors.borderSubtle),
       ),
       child: Padding(
         padding: padding ?? EdgeInsets.all(context.w(20)),

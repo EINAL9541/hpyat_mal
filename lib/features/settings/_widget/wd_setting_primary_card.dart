@@ -22,10 +22,11 @@ class SettingPrimaryCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: context.edgeInsets(all: 16),
+      padding: context.edgeInsets(all: 20),
       decoration: BoxDecoration(
-        color: AppColors.forestPrimary,
-        borderRadius: context.borderRadius(all: 20),
+        color: AppColors.forestDeep,
+        borderRadius: context.borderRadius(all: 16),
+        boxShadow: AppColors.cardShadow,
       ),
       child: Row(
         children: [
@@ -54,20 +55,51 @@ class SettingPrimaryCardWidget extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyle.headingSmall(context).copyWith(
                     color: AppColors.baseWhite,
-                    fontSize: context.sp(17.5),
-                    fontWeight: FontWeight.w600,
-                    height: 1.45,
+                    fontSize: context.sp(18),
+                    fontWeight: FontWeight.w700,
+                    height: 1.4,
                   ),
                 ),
-                SizedBox(height: context.h(3)),
-                Text(
-                  LocaleKeys.settings_profileSummary.tr(
-                    args: [smokingFreeDays.toString()],
+                SizedBox(height: context.h(4)),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.w(10),
+                    vertical: context.h(4),
                   ),
-                  style: AppTextStyle.captionMedium(context).copyWith(
-                    color: AppColors.leafSoft,
-                    fontWeight: FontWeight.w600,
-                    height: 1.5,
+                  decoration: BoxDecoration(
+                    color: AppColors.baseWhite.withValues(alpha: 0.10),
+                    borderRadius: context.borderRadius(all: 50),
+                    border: Border.all(
+                      color: AppColors.amberWarm.withValues(alpha: 0.45),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '★',
+                        style: TextStyle(
+                          color: AppColors.amberWarm,
+                          fontSize: context.sp(11),
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      SizedBox(width: context.w(5)),
+                      Flexible(
+                        child: Text(
+                          LocaleKeys.settings_profileSummary.tr(
+                            args: [smokingFreeDays.toString()],
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyle.captionSmall(context).copyWith(
+                            color: AppColors.baseWhite,
+                            fontWeight: FontWeight.w600,
+                            height: 1.3,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],

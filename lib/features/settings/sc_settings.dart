@@ -40,19 +40,20 @@ class SettingsScreen extends ConsumerWidget {
         ),
         title: Text(
           LocaleKeys.settings_title.tr(),
-          style: AppTextStyle.headingSmall(context)
-              .copyWith(color: AppColors.forestDeep),
+          style: AppTextStyle.headingSmall(context).copyWith(
+            color: AppColors.forestDeep,
+          ),
         ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(
-            horizontal: context.w(20),
+            horizontal: context.w(16),
             vertical: context.h(12),
           ),
           child: Column(
             crossAxisAlignment: .start,
-            spacing: context.h(20),
+            spacing: context.h(16),
             children: [
               SettingPrimaryCardWidget(
                 username: forest.userName,
@@ -67,31 +68,31 @@ class SettingsScreen extends ConsumerWidget {
                     onTap: () =>
                         context.push(RouteKeys.settingsPersonalInfo.path),
                   ),
-                  SettingsGroupDividerWidget(),
+                  const SettingsGroupDividerWidget(),
                   SettingsGroupItemWidget(
                     icon: LucideIcons.palette,
                     title: LocaleKeys.settings_themeTitle.tr(),
                     onTap: () => context.push(RouteKeys.settingsTheme.path),
                   ),
-                  SettingsGroupDividerWidget(),
+                  const SettingsGroupDividerWidget(),
                   SettingsGroupItemWidget(
                     icon: LucideIcons.languages,
                     title: LocaleKeys.settings_languageTitle.tr(),
                     onTap: () => context.push(RouteKeys.settingsLanguage.path),
                   ),
-                  SettingsGroupDividerWidget(),
+                  const SettingsGroupDividerWidget(),
                   SettingsGroupItemWidget(
                     icon: LucideIcons.coins,
                     title: LocaleKeys.settings_currencyTitle.tr(),
                     trailingWidget: CurrencyDropdownWidget(forest: forest),
                   ),
-                  SettingsGroupDividerWidget(),
+                  const SettingsGroupDividerWidget(),
                   SettingsGroupItemWidget(
                     icon: LucideIcons.info,
                     title: LocaleKeys.settings_aboutUsTitle.tr(),
                     onTap: () => context.push(RouteKeys.settingsAboutUs.path),
                   ),
-                  SettingsGroupDividerWidget(),
+                  const SettingsGroupDividerWidget(),
                   SettingsGroupItemWidget(
                     icon: LucideIcons.messageSquareHeart,
                     title: LocaleKeys.settings_feedbackTitle.tr(),

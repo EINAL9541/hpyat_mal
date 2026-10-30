@@ -26,7 +26,7 @@ class NameStepWidget extends StatelessWidget {
     final isCherry = selectedPlant.isCherry;
 
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: context.w(24)),
+      padding: EdgeInsets.symmetric(horizontal: context.w(20)),
       child: ValueListenableBuilder<TextEditingValue>(
         valueListenable: controller,
         builder: (context, value, _) {
@@ -37,7 +37,8 @@ class NameStepWidget extends StatelessWidget {
 
           final activeSanctuaryLabel = isCherry
               ? LocaleKeys.onboarding_sanctuaryActiveCherry.tr(args: [trimmed])
-              : LocaleKeys.onboarding_sanctuaryActiveEmerald.tr(args: [trimmed]);
+              : LocaleKeys.onboarding_sanctuaryActiveEmerald
+                  .tr(args: [trimmed]);
 
           final idleSanctuaryLabel = isCherry
               ? LocaleKeys.onboarding_sanctuaryIdleCherry.tr()
@@ -48,7 +49,7 @@ class NameStepWidget extends StatelessWidget {
             children: [
               SizedBox(height: context.h(12)),
 
-              // Bespoke Living Seedling Canvas Banner (awakens as user types & morphs with plant choice)
+              // Bespoke Living Seedling Canvas Banner (12px Card Radius, 2px Active Ring)
               TweenAnimationBuilder<double>(
                 tween: Tween<double>(
                   begin: 0.0,
@@ -61,23 +62,15 @@ class NameStepWidget extends StatelessWidget {
                     width: double.infinity,
                     height: context.h(136),
                     decoration: BoxDecoration(
-                      borderRadius: context.borderRadius(all: 22),
+                      borderRadius: context.borderRadius(all: 12),
                       border: Border.all(
-                        color: hasName
-                            ? AppColors.emerald.withValues(alpha: 0.38)
-                            : AppColors.border,
-                        width: 1.2,
+                        color: hasName ? AppColors.emerald : AppColors.border,
+                        width: hasName ? 1.8 : 1.0,
                       ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.forestDeep.withValues(alpha: 0.04),
-                          blurRadius: 16,
-                          offset: const Offset(0, 6),
-                        ),
-                      ],
+                      boxShadow: AppColors.cardShadow,
                     ),
                     child: ClipRRect(
-                      borderRadius: context.borderRadius(all: 21),
+                      borderRadius: context.borderRadius(all: 11),
                       child: Stack(
                         children: [
                           Positioned.fill(
@@ -88,7 +81,7 @@ class NameStepWidget extends StatelessWidget {
                               ),
                             ),
                           ),
-                          // Subtle 1-tap theme toggle in top-right of canvas banner
+                          // 50px Full-Pill 1-tap theme toggle in top-right of canvas banner
                           Positioned(
                             top: context.h(10),
                             right: context.w(12),
@@ -107,15 +100,12 @@ class NameStepWidget extends StatelessWidget {
                                   vertical: context.h(5),
                                 ),
                                 decoration: BoxDecoration(
-                                  color: AppColors.surfaceCard.withValues(
-                                    alpha: 0.88,
-                                  ),
-                                  borderRadius: context.borderRadius(all: 20),
+                                  color: AppColors.surfaceCard,
+                                  borderRadius: context.borderRadius(all: 50),
                                   border: Border.all(
-                                    color: AppColors.emerald.withValues(
-                                      alpha: 0.35,
-                                    ),
+                                    color: AppColors.emerald,
                                   ),
+                                  boxShadow: AppColors.cardShadow,
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
@@ -140,9 +130,9 @@ class NameStepWidget extends StatelessWidget {
                             ),
                           ),
                           Positioned(
-                            left: context.w(16),
+                            left: context.w(14),
                             bottom: context.h(12),
-                            right: context.w(16),
+                            right: context.w(14),
                             child: Row(
                               children: [
                                 Container(
@@ -151,15 +141,11 @@ class NameStepWidget extends StatelessWidget {
                                     vertical: context.h(4),
                                   ),
                                   decoration: BoxDecoration(
-                                    color: AppColors.surfaceCard.withValues(
-                                      alpha: 0.90,
-                                    ),
-                                    borderRadius: context.borderRadius(all: 20),
+                                    color: AppColors.surfaceCard,
+                                    borderRadius: context.borderRadius(all: 50),
                                     border: Border.all(
                                       color: hasName
-                                          ? AppColors.emerald.withValues(
-                                              alpha: 0.35,
-                                            )
+                                          ? AppColors.emerald
                                           : AppColors.border,
                                     ),
                                   ),
@@ -171,9 +157,7 @@ class NameStepWidget extends StatelessWidget {
                                             ? LucideIcons.flower2
                                             : LucideIcons.sprout,
                                         size: context.w(13),
-                                        color: hasName
-                                            ? AppColors.forestPrimary
-                                            : AppColors.emerald,
+                                        color: AppColors.forestPrimary,
                                       ),
                                       SizedBox(width: context.w(6)),
                                       ConstrainedBox(
@@ -213,13 +197,13 @@ class NameStepWidget extends StatelessWidget {
               Text(
                 LocaleKeys.onboarding_welcomeTitle.tr(),
                 style: AppTextStyle.headingLarge(context).copyWith(
-                  color: AppColors.forestDeep,
+                  color: AppColors.forestPrimary,
                 ),
               ),
 
               SizedBox(height: context.h(8)),
 
-              // Unified Subtitle (no longer duplicates nameLabel)
+              // Unified Subtitle
               Text(
                 LocaleKeys.onboarding_welcomeSubtitle.tr(),
                 style: AppTextStyle.bodyMedium(context).copyWith(
@@ -229,7 +213,7 @@ class NameStepWidget extends StatelessWidget {
 
               SizedBox(height: context.h(22)),
 
-              // Field Label & Name Input Field
+              // Field Label & Name Input Field (12px radius)
               AppTextFieldWidget(
                 label: LocaleKeys.onboarding_nameLabel.tr(),
                 controller: controller,
@@ -237,10 +221,10 @@ class NameStepWidget extends StatelessWidget {
                 textCapitalization: TextCapitalization.words,
                 textInputAction: TextInputAction.done,
                 autofocus: false,
-                borderRadius: 16,
+                borderRadius: 12,
                 contentPadding: EdgeInsets.symmetric(
-                  horizontal: context.w(18),
-                  vertical: context.h(16),
+                  horizontal: context.w(16),
+                  vertical: context.h(14),
                 ),
                 suffixIcon: hasName
                     ? IconButton(
@@ -276,37 +260,13 @@ class _SeedlingAwakeningPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final rect = Offset.zero & size;
 
-    // 1. Warm Dawn Sky Gradient (Sakura Blush vs Morning Forest Mist)
+    // 1. Solid Warm Botanical Wash (Starbucks Light Mint vs Sakura Light)
     final skyPaint = Paint()
-      ..shader = LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: isCherry
-            ? [
-                Color.lerp(
-                  const Color(0xFFFDF2F6),
-                  const Color(0xFFFCE4EE),
-                  progress,
-                )!,
-                Color.lerp(
-                  const Color(0xFFFCF8FA),
-                  const Color(0xFFFFF0F5),
-                  progress,
-                )!,
-              ]
-            : [
-                Color.lerp(
-                  const Color(0xFFF2F9F5),
-                  const Color(0xFFE2F5EA),
-                  progress,
-                )!,
-                Color.lerp(
-                  const Color(0xFFF9FBFA),
-                  const Color(0xFFFFF3E6),
-                  progress * 0.7,
-                )!,
-              ],
-      ).createShader(rect);
+      ..color = Color.lerp(
+        AppColors.leafBackground,
+        AppColors.leafSoft,
+        progress * 0.65,
+      )!;
     canvas.drawRect(rect, skyPaint);
 
     // 2. Rising Sun Halo on the right
@@ -318,10 +278,8 @@ class _SeedlingAwakeningPainter extends CustomPainter {
     final sunGlow = Paint()
       ..shader = RadialGradient(
         colors: [
-          (isCherry ? const Color(0xFFFFB3C6) : const Color(0xFFFFE5B4))
-              .withValues(alpha: 0.45 + 0.35 * progress),
-          (isCherry ? const Color(0xFFFF85A1) : const Color(0xFFFFB3C6))
-              .withValues(alpha: 0.22 * progress),
+          AppColors.amberWarm.withValues(alpha: 0.35 + 0.25 * progress),
+          AppColors.leafSoft.withValues(alpha: 0.20 * progress),
           Colors.transparent,
         ],
       ).createShader(Rect.fromCircle(center: sunCenter, radius: sunRadius * 2));
@@ -330,8 +288,8 @@ class _SeedlingAwakeningPainter extends CustomPainter {
       sunCenter,
       14.0 + 4.0 * progress,
       Paint()
-        ..color = const Color(0xFFFFF8E7).withValues(
-          alpha: 0.75 + 0.25 * progress,
+        ..color = AppColors.amberLight.withValues(
+          alpha: 0.85 + 0.15 * progress,
         ),
     );
 
@@ -355,11 +313,7 @@ class _SeedlingAwakeningPainter extends CustomPainter {
       ..close();
     canvas.drawPath(
       backHill,
-      Paint()
-        ..color = (isCherry
-                ? const Color(0xFFF7A8C4)
-                : const Color(0xFF74C69D))
-            .withValues(alpha: 0.25),
+      Paint()..color = AppColors.sageLight.withValues(alpha: 0.28),
     );
 
     final frontHill = Path()
@@ -375,11 +329,7 @@ class _SeedlingAwakeningPainter extends CustomPainter {
       ..close();
     canvas.drawPath(
       frontHill,
-      Paint()
-        ..color = (isCherry
-                ? const Color(0xFFD85A88)
-                : const Color(0xFF40916C))
-            .withValues(alpha: 0.20),
+      Paint()..color = AppColors.emerald.withValues(alpha: 0.22),
     );
 
     // 4. Awakening Sapling on the right-center mound
@@ -410,7 +360,7 @@ class _SeedlingAwakeningPainter extends CustomPainter {
       Offset(baseX - 1, baseY - stemHeight * 0.62),
       angle: -0.7 - 0.15 * progress,
       scale: leafScale,
-      color: const Color(0xFF40916C),
+      color: AppColors.emerald,
     );
 
     // Right Leaf
@@ -419,10 +369,10 @@ class _SeedlingAwakeningPainter extends CustomPainter {
       Offset(baseX + 1, baseY - stemHeight * 0.78),
       angle: 0.65 + 0.15 * progress,
       scale: leafScale,
-      color: const Color(0xFF52B788),
+      color: AppColors.mintAccent,
     );
 
-    // 5. Crown Bloom (Pink Sakura Flower vs Radiant Emerald Crown) when user types their name
+    // 5. Crown Bloom when user types their name
     if (progress > 0.05) {
       final flowerScale = progress.clamp(0.0, 1.0);
       final flowerCenter = Offset(baseX, baseY - stemHeight - 4);
@@ -430,10 +380,7 @@ class _SeedlingAwakeningPainter extends CustomPainter {
       canvas.translate(flowerCenter.dx, flowerCenter.dy);
       canvas.scale(flowerScale);
 
-      final petalPaint = Paint()
-        ..color = isCherry
-            ? const Color(0xFFFF9EBB)
-            : const Color(0xFF52B788);
+      final petalPaint = Paint()..color = AppColors.emerald;
       for (int i = 0; i < 5; i++) {
         canvas.save();
         canvas.rotate(i * (math.pi * 2 / 5));
@@ -446,7 +393,7 @@ class _SeedlingAwakeningPainter extends CustomPainter {
       canvas.drawCircle(
         Offset.zero,
         3.0,
-        Paint()..color = const Color(0xFFFFD166),
+        Paint()..color = AppColors.amberWarm,
       );
       canvas.restore();
     }

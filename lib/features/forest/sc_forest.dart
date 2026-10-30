@@ -26,13 +26,13 @@ class ForestScreen extends ConsumerWidget {
         bottom: false,
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(
-            horizontal: context.w(18),
+            horizontal: context.w(16),
             vertical: context.h(12),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 1. Header with "Hi, Name", Vitality, and Settings Button on the right
+              // 1. Header with Greeting, subtle vitality dot, and Settings Button
               ForestHeaderWidget(
                 userName: forest.userName,
                 vitality: forest.forestVitality,
@@ -40,38 +40,27 @@ class ForestScreen extends ConsumerWidget {
                 onOpenSettings: () => context.push(RouteKeys.settings.path),
               ),
 
-              SizedBox(height: context.h(14)),
+              SizedBox(height: context.h(16)),
 
-              // 2. The Personal "Why" Anchor Card (Always visible for motivation)
-              MotivationAnchorCardWidget(
-                userName: forest.userName,
-                quitReason: forest.quitReason,
-                onUpdateReason: (newReason) {
-                  ref.read(forestProvider.notifier).updateQuitReason(newReason);
-                },
-              ),
-
-              SizedBox(height: context.h(14)),
-
-              // 3. Animated Forest Canvas (adapts to Emerald Tree vs Cherry Blossom Tree)
+              // 2. Animated Sanctuary Canvas (focal point right at the top)
               ForestCanvasWidget(
                 days: forest.days,
                 vitality: forest.forestVitality,
                 plantTheme: forest.plantTheme,
               ),
 
-              SizedBox(height: context.h(14)),
+              SizedBox(height: context.h(16)),
 
-              // 4. Smoke-Free Streak Countdown
+              // 3. Unboxed Smoke-Free Streak Counter on Warm Cream Canvas
               StreakCounterWidget(
                 quitDate: forest.quitDate,
                 stageName: forest.stageName,
                 stageDescription: forest.stageDescription,
               ),
 
-              SizedBox(height: context.h(14)),
+              SizedBox(height: context.h(16)),
 
-              // 5. Quick Recovery Metrics Row
+              // 4. Unified Horizontal Quick Stats Card (12px White Card on Cream)
               ForestQuickStatsWidget(
                 cigarettesAvoided: forest.cigarettesAvoided,
                 moneySaved: forest.moneySaved,
@@ -83,12 +72,23 @@ class ForestScreen extends ConsumerWidget {
                 currencyUnit: forest.currencyUnit(context.locale.languageCode),
               ),
 
-              SizedBox(height: context.h(14)),
+              SizedBox(height: context.h(16)),
 
-              // 6. SOS Emergency Craving Card
+              // 5. Personal Promise Ceremony Card (#FAF6EE Gold Lightest + #CBA258 Gold)
+              MotivationAnchorCardWidget(
+                userName: forest.userName,
+                quitReason: forest.quitReason,
+                onUpdateReason: (newReason) {
+                  ref.read(forestProvider.notifier).updateQuitReason(newReason);
+                },
+              ),
+
+              SizedBox(height: context.h(12)),
+
+              // 6. Calm Craving Relief Prompt
               const DailyNourishCardWidget(),
 
-              SizedBox(height: context.h(85)), // Bottom bar clearance
+              SizedBox(height: context.h(24)),
             ],
           ),
         ),

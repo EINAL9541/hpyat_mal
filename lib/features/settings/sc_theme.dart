@@ -41,7 +41,7 @@ class ThemeScreen extends ConsumerWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(
-            horizontal: context.w(22),
+            horizontal: context.w(16),
             vertical: context.h(12),
           ),
           child: Column(
@@ -50,21 +50,21 @@ class ThemeScreen extends ConsumerWidget {
               Text(
                 LocaleKeys.settings_themeSectionTitle.tr(),
                 style: AppTextStyle.headingSmall(context)
-                    .copyWith(color: AppColors.forestDeep),
+                    .copyWith(color: AppColors.forestPrimary),
               ),
               SizedBox(height: context.h(4)),
               Text(
                 LocaleKeys.settings_themeSectionDesc.tr(),
                 style: AppTextStyle.captionMedium(context),
               ),
-              SizedBox(height: context.h(14)),
+              SizedBox(height: context.h(16)),
               ThemeChoiceCardWidget(
-                imageAsset: 'assets/images/deciduous_tree.png',
+                icon: LucideIcons.treeDeciduous,
                 title: LocaleKeys.settings_emeraldTreeTitle.tr(),
                 subtitle: LocaleKeys.settings_emeraldTreeSubtitle.tr(),
                 isSelected: plantTheme.isEmerald,
-                accentColor: const Color(0xFF1B4D3E),
-                softColor: const Color(0xFFD8F3DC),
+                accentColor: AppThemePalette.emeraldForest.emerald,
+                softColor: AppThemePalette.emeraldForest.leafSoft,
                 onTap: () {
                   HapticFeedback.selectionClick();
                   ref
@@ -74,12 +74,12 @@ class ThemeScreen extends ConsumerWidget {
               ),
               SizedBox(height: context.h(12)),
               ThemeChoiceCardWidget(
-                imageAsset: 'assets/images/cherry_blossom.png',
+                icon: LucideIcons.flower2,
                 title: LocaleKeys.settings_cherryTreeTitle.tr(),
                 subtitle: LocaleKeys.settings_cherryTreeSubtitle.tr(),
                 isSelected: plantTheme.isCherry,
-                accentColor: const Color(0xFF9C2D56),
-                softColor: const Color(0xFFFCE4EE),
+                accentColor: AppThemePalette.cherryBlossom.emerald,
+                softColor: AppThemePalette.cherryBlossom.leafSoft,
                 onTap: () {
                   HapticFeedback.selectionClick();
                   ref

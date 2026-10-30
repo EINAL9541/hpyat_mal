@@ -168,11 +168,11 @@ class OnboardingScreen extends HookConsumerWidget {
                           height: context.h(6),
                           decoration: BoxDecoration(
                             color: isActive
-                                ? AppColors.forestPrimary
+                                ? AppColors.emerald
                                 : (isPassed
-                                    ? AppColors.emerald
+                                    ? AppColors.forestPrimary
                                     : AppColors.border),
-                            borderRadius: context.borderRadius(all: 3),
+                            borderRadius: context.borderRadius(all: 50),
                           ),
                         );
                       }),
@@ -226,10 +226,10 @@ class OnboardingScreen extends HookConsumerWidget {
               ),
             ),
 
-            // Fixed Bottom Action Button
+            // Fixed Bottom Action Button (50px Full Pill per Starbucks DESIGN.md)
             Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: context.w(22),
+                horizontal: context.w(20),
                 vertical: context.h(16),
               ),
               child: SizedBox(
@@ -238,13 +238,11 @@ class OnboardingScreen extends HookConsumerWidget {
                 child: ElevatedButton(
                   onPressed: canContinue ? goToNextStep : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.forestPrimary,
+                    backgroundColor: AppColors.emerald,
                     foregroundColor: AppColors.baseWhite,
                     disabledBackgroundColor: AppColors.border,
                     disabledForegroundColor: AppColors.textMuted,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: context.borderRadius(all: 16),
-                    ),
+                    shape: const StadiumBorder(),
                     elevation: 0,
                   ),
                   child: Row(

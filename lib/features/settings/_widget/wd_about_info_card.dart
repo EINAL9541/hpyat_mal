@@ -22,8 +22,9 @@ class AboutInfoCardWidget extends StatelessWidget {
       padding: EdgeInsets.all(context.w(16)),
       decoration: BoxDecoration(
         color: AppColors.surfaceCard,
-        borderRadius: context.borderRadius(all: 18),
-        border: Border.all(color: AppColors.border),
+        borderRadius: context.borderRadius(all: 12),
+        border: Border.all(color: AppColors.borderSubtle),
+        boxShadow: AppColors.cardShadow,
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,11 +34,11 @@ class AboutInfoCardWidget extends StatelessWidget {
             height: context.h(40),
             decoration: BoxDecoration(
               color: AppColors.leafSoft,
-              borderRadius: context.borderRadius(all: 12),
+              shape: BoxShape.circle,
             ),
             child: Icon(
               icon,
-              size: context.w(20),
+              size: context.w(18),
               color: AppColors.forestPrimary,
             ),
           ),

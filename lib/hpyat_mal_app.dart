@@ -27,12 +27,57 @@ class HpyatMalApp extends ConsumerWidget {
         colorScheme: ColorScheme.fromSeed(
           seedColor: AppColors.forestPrimary,
           primary: AppColors.forestPrimary,
+          secondary: AppColors.emerald,
           surface: AppColors.surface,
+          onPrimary: AppColors.baseWhite,
+          onSurface: AppColors.textPrimary,
         ),
         appBarTheme: AppBarTheme(
           backgroundColor: AppColors.surface,
           surfaceTintColor: Colors.transparent,
           elevation: 0,
+          scrolledUnderElevation: 0,
+          centerTitle: true,
+          iconTheme: IconThemeData(color: AppColors.forestPrimary),
+        ),
+        cardTheme: CardThemeData(
+          color: AppColors.surfaceCard,
+          surfaceTintColor: Colors.transparent,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(color: AppColors.borderSubtle),
+          ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.emerald,
+            foregroundColor: AppColors.baseWhite,
+            disabledBackgroundColor: AppColors.border,
+            disabledForegroundColor: AppColors.textMuted,
+            elevation: 0,
+            shape: const StadiumBorder(),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          ),
+        ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            foregroundColor: AppColors.emerald,
+            side: BorderSide(color: AppColors.emerald, width: 1.5),
+            shape: const StadiumBorder(),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          ),
+        ),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            foregroundColor: AppColors.textSecondary,
+            shape: const StadiumBorder(),
+          ),
+        ),
+        dividerTheme: DividerThemeData(
+          color: AppColors.borderSubtle,
+          thickness: 1,
+          space: 1,
         ),
       ),
       routerConfig: appRouter,

@@ -41,15 +41,11 @@ class AppCurrency {
   /// Clean display label for dropdowns.
   ///
   /// Examples:
-  /// - MMK in 'my': 'MMK (ကျပ်)'
-  /// - MMK in 'en': 'MMK'
-  /// - USD: 'USD ($)'
-  /// - THB: 'THB (฿)'
+  /// - MMK: 'MMK'
+  /// - USD: 'USD'
+  /// - THB: 'THB'
   String dropdownLabel(String languageCode) {
-    if (isMmk) {
-      return languageCode == 'my' ? 'MMK (ကျပ်)' : 'MMK';
-    }
-    return '$code ($symbol)';
+    return code;
   }
 
   /// Formats an amount with this currency according to [languageCode].

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
+import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:hpyat_mal/core/extensions/context_extensions.dart';
 import 'package:hpyat_mal/core/theme/app_color.dart';
@@ -17,116 +17,155 @@ class BottomNavbarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Stack(
-        alignment: Alignment.bottomCenter,
-        clipBehavior: Clip.none,
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: context.w(6),
-              vertical: context.h(4),
-            ),
-            margin: EdgeInsets.symmetric(
-              horizontal: context.w(16),
-              vertical: context.h(8),
-            ),
-            decoration: BoxDecoration(
-              color: AppColors.surfaceCard,
-              borderRadius: context.borderRadius(all: 24),
-              border: Border.all(color: AppColors.border, width: 1.2),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.forestDeep.withValues(alpha: 0.08),
-                  blurRadius: 20,
-                  offset: const Offset(0, 8),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _NavItem(
-                  icon: LucideIcons.trees,
-                  label: "Forest",
-                  isSelected: selectedIndex == 0,
-                  onTap: () => onTap(0),
-                ),
-                _NavItem(
-                  icon: LucideIcons.activity,
-                  label: "Healing",
-                  isSelected: selectedIndex == 1,
-                  onTap: () => onTap(1),
-                ),
-                SizedBox(width: context.w(48)), // Space for center floating SOS button
-                _NavItem(
-                  icon: LucideIcons.bookOpen,
-                  label: "Journal",
-                  isSelected: selectedIndex == 2,
-                  onTap: () => onTap(2),
-                ),
-                _NavItem(
-                  icon: LucideIcons.piggyBank,
-                  label: "Savings",
-                  isSelected: selectedIndex == 3,
-                  onTap: () => onTap(3),
-                ),
-              ],
-            ),
-          ),
+    final isBreathingSelected = selectedIndex == 4;
 
-          // Floating Center SOS Button
-          Positioned(
-            top: -16,
-            child: GestureDetector(
-              onTap: () => onTap(4), // Center SOS Breathing
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(
+          context.w(16),
+          context.h(4),
+          context.w(16),
+          context.h(8),
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          clipBehavior: Clip.none,
+          children: [
+            // Main Navbar Dock
+            Container(
+              height: context.h(64),
+              padding: EdgeInsets.symmetric(horizontal: context.w(8)),
+              decoration: BoxDecoration(
+                color: AppColors.surfaceCard,
+                borderRadius: context.borderRadius(all: 36),
+                border: Border.all(color: AppColors.borderSubtle, width: 1),
+                boxShadow: AppColors.cardShadow,
+              ),
+              child: Row(
                 children: [
-                  Container(
-                    width: context.w(52),
-                    height: context.h(52),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          AppColors.emerald,
-                          AppColors.forestPrimary,
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.surfaceCard, width: 3),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.emerald.withValues(alpha: 0.4),
-                          blurRadius: 14,
-                          offset: const Offset(0, 6),
-                        ),
-                      ],
-                    ),
-                    child: Icon(
-                      LucideIcons.wind,
-                      color: AppColors.baseWhite,
-                      size: context.w(24),
+                  Expanded(
+                    child: _NavItem(
+                      icon: LucideIcons.trees,
+                      label: "Forest",
+                      isSelected: selectedIndex == 0,
+                      onTap: () {
+                        HapticFeedback.selectionClick();
+                        onTap(0);
+                      },
                     ),
                   ),
-                  SizedBox(height: context.h(2)),
-                  Text(
-                    "SOS",
-                    style: AppTextStyle.captionSmall(context).copyWith(
-                      color: selectedIndex == 4
-                          ? AppColors.emerald
-                          : AppColors.textSecondary,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 10,
+                  Expanded(
+                    child: _NavItem(
+                      icon: LucideIcons.activity,
+                      label: "Healing",
+                      isSelected: selectedIndex == 1,
+                      onTap: () {
+                        HapticFeedback.selectionClick();
+                        onTap(1);
+                      },
+                    ),
+                  ),
+
+                  // Center spacer for the elevated circular emblem button
+                  SizedBox(width: context.w(68)),
+
+                  Expanded(
+                    child: _NavItem(
+                      icon: LucideIcons.bookOpen,
+                      label: "Journal",
+                      isSelected: selectedIndex == 2,
+                      onTap: () {
+                        HapticFeedback.selectionClick();
+                        onTap(2);
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: _NavItem(
+                      icon: LucideIcons.piggyBank,
+                      label: "Savings",
+                      isSelected: selectedIndex == 3,
+                      onTap: () {
+                        HapticFeedback.selectionClick();
+                        onTap(3);
+                      },
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-        ],
+
+            // Center Circular Medallion Button ("Breathe")
+            Positioned(
+              top: -context.h(12),
+              child: GestureDetector(
+                onTap: () {
+                  HapticFeedback.mediumImpact();
+                  onTap(4);
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(context.w(4)),
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceCard,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: isBreathingSelected
+                              ? AppColors.emerald.withValues(alpha: 0.35)
+                              : AppColors.borderSubtle,
+                          width: 1,
+                        ),
+                        boxShadow: AppColors.cardShadow,
+                      ),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 220),
+                        curve: Curves.easeOutCubic,
+                        width: context.w(48),
+                        height: context.w(48),
+                        decoration: BoxDecoration(
+                          color: isBreathingSelected
+                              ? AppColors.forestDeep
+                              : AppColors.emerald,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: isBreathingSelected
+                                ? AppColors.amberWarm
+                                : AppColors.leafSoft.withValues(alpha: 0.45),
+                            width: isBreathingSelected ? 2.0 : 1.5,
+                          ),
+                          boxShadow: AppColors.floatingShadow,
+                        ),
+                        alignment: Alignment.center,
+                        child: Icon(
+                          LucideIcons.wind,
+                          color: AppColors.baseWhite,
+                          size: context.w(22),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: context.h(2)),
+                    Text(
+                      "Breathe",
+                      style: AppTextStyle.captionSmall(context).copyWith(
+                        color: isBreathingSelected
+                            ? AppColors.forestPrimary
+                            : AppColors.textMuted,
+                        fontWeight: isBreathingSelected
+                            ? FontWeight.w700
+                            : FontWeight.w500,
+                        fontSize: 10,
+                        letterSpacing: -0.1,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -154,37 +193,42 @@ class _NavItem extends StatelessWidget {
       onTap: onTap,
       splashColor: AppColors.transparent,
       highlightColor: AppColors.transparent,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: EdgeInsets.symmetric(
-          horizontal: context.w(8),
-          vertical: context.h(4),
-        ),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? AppColors.leafSoft.withValues(alpha: 0.5)
-              : AppColors.transparent,
-          borderRadius: context.borderRadius(all: 12),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOutCubic,
+            padding: EdgeInsets.symmetric(
+              horizontal: context.w(12),
+              vertical: context.h(4),
+            ),
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? AppColors.leafSoft
+                  : AppColors.transparent,
+              borderRadius: context.borderRadius(all: 50),
+            ),
+            child: Icon(
               icon,
               color: isSelected ? activeColor : inactiveColor,
-              size: context.w(20),
+              size: context.w(19),
             ),
-            SizedBox(height: context.h(2)),
-            Text(
-              label,
-              style: AppTextStyle.captionSmall(context).copyWith(
-                color: isSelected ? activeColor : inactiveColor,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                fontSize: 10.5,
-              ),
+          ),
+          SizedBox(height: context.h(2)),
+          Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyle.captionSmall(context).copyWith(
+              color: isSelected ? activeColor : inactiveColor,
+              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+              fontSize: 10,
+              letterSpacing: -0.1,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -22,7 +22,7 @@ class LanguageChoiceCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: context.borderRadius(all: 16),
+      borderRadius: context.borderRadius(all: 12),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 180),
         padding: EdgeInsets.symmetric(
@@ -30,27 +30,26 @@ class LanguageChoiceCardWidget extends StatelessWidget {
           vertical: context.h(14),
         ),
         decoration: BoxDecoration(
-          color: isSelected
-              ? AppColors.leafSoft.withValues(alpha: 0.7)
-              : AppColors.surfaceCard,
-          borderRadius: context.borderRadius(all: 16),
+          color: AppColors.surfaceCard,
+          borderRadius: context.borderRadius(all: 12),
           border: Border.all(
-            color: isSelected ? AppColors.emerald : AppColors.border,
-            width: 1.2,
+            color: isSelected ? AppColors.emerald : AppColors.borderSubtle,
+            width: isSelected ? 2.0 : 1.0,
           ),
+          boxShadow: AppColors.cardShadow,
         ),
         child: Row(
           children: [
             Container(
               padding: EdgeInsets.symmetric(
-                horizontal: context.w(10),
+                horizontal: context.w(12),
                 vertical: context.h(5),
               ),
               decoration: BoxDecoration(
                 color: isSelected
-                    ? AppColors.forestPrimary
-                    : AppColors.leafBackground,
-                borderRadius: context.borderRadius(all: 10),
+                    ? AppColors.emerald
+                    : AppColors.leafSoft,
+                borderRadius: context.borderRadius(all: 50),
               ),
               child: Text(
                 badge,
@@ -73,7 +72,7 @@ class LanguageChoiceCardWidget extends StatelessWidget {
             if (isSelected)
               Icon(
                 LucideIcons.circleCheck,
-                color: AppColors.forestPrimary,
+                color: AppColors.emerald,
                 size: context.w(20),
               ),
           ],

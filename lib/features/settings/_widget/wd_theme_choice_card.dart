@@ -5,7 +5,7 @@ import 'package:hpyat_mal/core/theme/app_text_style.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ThemeChoiceCardWidget extends StatelessWidget {
-  final String imageAsset;
+  final IconData icon;
   final String title;
   final String subtitle;
   final bool isSelected;
@@ -15,7 +15,7 @@ class ThemeChoiceCardWidget extends StatelessWidget {
 
   const ThemeChoiceCardWidget({
     super.key,
-    required this.imageAsset,
+    required this.icon,
     required this.title,
     required this.subtitle,
     required this.isSelected,
@@ -28,19 +28,18 @@ class ThemeChoiceCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: context.borderRadius(all: 18),
+      borderRadius: context.borderRadius(all: 12),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         padding: EdgeInsets.all(context.w(16)),
         decoration: BoxDecoration(
-          color: isSelected
-              ? softColor.withValues(alpha: 0.65)
-              : AppColors.surfaceCard,
-          borderRadius: context.borderRadius(all: 18),
+          color: AppColors.surfaceCard,
+          borderRadius: context.borderRadius(all: 12),
           border: Border.all(
-            color: isSelected ? accentColor : AppColors.border,
-            width: isSelected ? 1.8 : 1.2,
+            color: isSelected ? accentColor : AppColors.borderSubtle,
+            width: isSelected ? 2.0 : 1.0,
           ),
+          boxShadow: AppColors.cardShadow,
         ),
         child: Row(
           children: [
@@ -52,11 +51,10 @@ class ThemeChoiceCardWidget extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               alignment: Alignment.center,
-              child: Image.asset(
-                imageAsset,
-                width: context.w(28),
-                height: context.w(28),
-                fit: BoxFit.contain,
+              child: Icon(
+                icon,
+                size: context.w(28),
+                color: accentColor,
               ),
             ),
             SizedBox(width: context.w(14)),
@@ -67,7 +65,7 @@ class ThemeChoiceCardWidget extends StatelessWidget {
                   Text(
                     title,
                     style: AppTextStyle.bodySemiBold(context).copyWith(
-                      color: accentColor,
+                      color: isSelected ? accentColor : AppColors.forestDeep,
                       fontWeight: FontWeight.w700,
                       fontSize: 15.5,
                     ),

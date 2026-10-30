@@ -37,7 +37,7 @@ class WhyStepWidget extends StatelessWidget {
     final isCustomSelected = selectedWhyIndex.value == customWhyOptionIndex;
 
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: context.w(22)),
+      padding: EdgeInsets.symmetric(horizontal: context.w(20)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -45,9 +45,9 @@ class WhyStepWidget extends StatelessWidget {
           Text(
             LocaleKeys.onboarding_whyTitle.tr(),
             style: AppTextStyle.headingLarge(context).copyWith(
-              color: AppColors.forestDeep,
-              fontSize: 25,
-              height: 1.5,
+              color: AppColors.forestPrimary,
+              fontSize: 24,
+              height: 1.4,
             ),
           ),
           SizedBox(height: context.h(8)),
@@ -56,7 +56,7 @@ class WhyStepWidget extends StatelessWidget {
             style: AppTextStyle.bodyMedium(context).copyWith(
               color: AppColors.textSecondary,
               fontSize: 15,
-              height: 1.65,
+              height: 1.6,
             ),
           ),
           SizedBox(height: context.h(18)),
@@ -71,7 +71,7 @@ class WhyStepWidget extends StatelessWidget {
           ),
           SizedBox(height: context.h(10)),
 
-          // 1..5: Preset Vow Cards (selected by index so language switching preserves selection)
+          // 1..5: Preset Vow Cards (12px white cards with Starbucks 2px active ring)
           ...List.generate(whySuggestions.length, (index) {
             final suggestion = whySuggestions[index];
             final iconData = _suggestionIcons[index % _suggestionIcons.length];
@@ -85,7 +85,7 @@ class WhyStepWidget extends StatelessWidget {
                   selectedWhyIndex.value = index;
                   FocusScope.of(context).unfocus();
                 },
-                borderRadius: context.borderRadius(all: 16),
+                borderRadius: context.borderRadius(all: 12),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 180),
                   width: double.infinity,
@@ -94,25 +94,26 @@ class WhyStepWidget extends StatelessWidget {
                     vertical: context.h(12),
                   ),
                   decoration: BoxDecoration(
-                    color: isSelected
-                        ? AppColors.leafSoft.withValues(alpha: 0.72)
-                        : AppColors.surfaceCard,
-                    borderRadius: context.borderRadius(all: 16),
+                    color: AppColors.surfaceCard,
+                    borderRadius: context.borderRadius(all: 12),
                     border: Border.all(
-                      color: isSelected ? AppColors.emerald : AppColors.border,
-                      width: isSelected ? 1.8 : 1.2,
+                      color: isSelected
+                          ? AppColors.emerald
+                          : AppColors.borderSubtle,
+                      width: isSelected ? 2.0 : 1.0,
                     ),
+                    boxShadow: AppColors.cardShadow,
                   ),
                   child: Row(
                     children: [
                       Container(
-                        width: context.w(34),
-                        height: context.h(34),
+                        width: context.w(36),
+                        height: context.h(36),
                         decoration: BoxDecoration(
                           color: isSelected
-                              ? AppColors.forestPrimary
-                              : AppColors.leafBackground,
-                          borderRadius: context.borderRadius(all: 10),
+                              ? AppColors.emerald
+                              : AppColors.leafSoft,
+                          shape: BoxShape.circle,
                         ),
                         child: Icon(
                           iconData,
@@ -131,7 +132,7 @@ class WhyStepWidget extends StatelessWidget {
                             fontWeight:
                                 isSelected ? FontWeight.w700 : FontWeight.w500,
                             fontSize: 14.5,
-                            height: 1.55,
+                            height: 1.5,
                           ),
                         ),
                       ),
@@ -140,7 +141,7 @@ class WhyStepWidget extends StatelessWidget {
                         Icon(
                           LucideIcons.circleCheck,
                           size: context.w(19),
-                          color: AppColors.forestPrimary,
+                          color: AppColors.emerald,
                         ),
                       ],
                     ],
@@ -150,14 +151,14 @@ class WhyStepWidget extends StatelessWidget {
             );
           }),
 
-          // 6th Card: "Write my own reason" (Expands TextField cleanly & never deletes user's typed text)
+          // 6th Card: "Write my own reason"
           InkWell(
             onTap: () {
               HapticFeedback.selectionClick();
               selectedWhyIndex.value = customWhyOptionIndex;
               Future.microtask(customWhyFocusNode.requestFocus);
             },
-            borderRadius: context.borderRadius(all: 16),
+            borderRadius: context.borderRadius(all: 12),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 180),
               width: double.infinity,
@@ -166,15 +167,15 @@ class WhyStepWidget extends StatelessWidget {
                 vertical: context.h(12),
               ),
               decoration: BoxDecoration(
-                color: isCustomSelected
-                    ? AppColors.leafSoft.withValues(alpha: 0.72)
-                    : AppColors.surfaceCard,
-                borderRadius: context.borderRadius(all: 16),
+                color: AppColors.surfaceCard,
+                borderRadius: context.borderRadius(all: 12),
                 border: Border.all(
-                  color:
-                      isCustomSelected ? AppColors.emerald : AppColors.border,
-                  width: isCustomSelected ? 1.8 : 1.2,
+                  color: isCustomSelected
+                      ? AppColors.emerald
+                      : AppColors.borderSubtle,
+                  width: isCustomSelected ? 2.0 : 1.0,
                 ),
+                boxShadow: AppColors.cardShadow,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -182,13 +183,13 @@ class WhyStepWidget extends StatelessWidget {
                   Row(
                     children: [
                       Container(
-                        width: context.w(34),
-                        height: context.h(34),
+                        width: context.w(36),
+                        height: context.h(36),
                         decoration: BoxDecoration(
                           color: isCustomSelected
-                              ? AppColors.forestPrimary
-                              : AppColors.leafBackground,
-                          borderRadius: context.borderRadius(all: 10),
+                              ? AppColors.emerald
+                              : AppColors.leafSoft,
+                          shape: BoxShape.circle,
                         ),
                         child: Icon(
                           LucideIcons.penLine,
@@ -208,7 +209,7 @@ class WhyStepWidget extends StatelessWidget {
                                 ? FontWeight.w700
                                 : FontWeight.w500,
                             fontSize: 14.5,
-                            height: 1.55,
+                            height: 1.5,
                           ),
                         ),
                       ),
@@ -217,7 +218,7 @@ class WhyStepWidget extends StatelessWidget {
                         Icon(
                           LucideIcons.circleCheck,
                           size: context.w(19),
-                          color: AppColors.forestPrimary,
+                          color: AppColors.emerald,
                         ),
                       ],
                     ],
@@ -231,6 +232,7 @@ class WhyStepWidget extends StatelessWidget {
                       textInputAction: TextInputAction.done,
                       hintText: LocaleKeys.onboarding_whyHint.tr(),
                       borderRadius: 12,
+                      fillColor: AppColors.surfaceCardMuted,
                       contentPadding: EdgeInsets.symmetric(
                         horizontal: context.w(14),
                         vertical: context.h(12),
