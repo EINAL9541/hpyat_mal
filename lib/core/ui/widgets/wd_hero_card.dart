@@ -35,7 +35,8 @@ class AppHeroCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = (gradientColors != null && gradientColors!.isNotEmpty)
+    final backgroundColor =
+        (gradientColors != null && gradientColors!.isNotEmpty)
         ? gradientColors!.first
         : AppColors.forestDeep;
 
@@ -62,10 +63,10 @@ class AppHeroCardWidget extends StatelessWidget {
                   Expanded(
                     child: Text(
                       title!,
-                      style: titleStyle ??
-                          AppTextStyle.headingSmall(context).copyWith(
-                            color: AppColors.baseWhite,
-                          ),
+                      style:
+                          titleStyle ??
+                          AppTextStyle.headingSmall(context)
+                              .copyWith(color: AppColors.baseWhite),
                     ),
                   ),
                 ?trailing,
@@ -75,7 +76,8 @@ class AppHeroCardWidget extends StatelessWidget {
             SizedBox(height: context.h(8)),
             Text(
               subtitle!,
-              style: subtitleStyle ??
+              style:
+                  subtitleStyle ??
                   AppTextStyle.bodyMedium(context).copyWith(
                     color: AppColors.baseWhite.withValues(alpha: 0.72),
                     fontSize: 13.5,
@@ -84,7 +86,8 @@ class AppHeroCardWidget extends StatelessWidget {
             ),
           ],
           if (child != null) ...[
-            if (title != null || subtitle != null) SizedBox(height: context.h(14)),
+            if (title != null || subtitle != null)
+              SizedBox(height: context.h(14)),
             child!,
           ],
         ],

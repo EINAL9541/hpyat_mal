@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -55,16 +56,18 @@ class _SquareImageCropperScreenState extends State<SquareImageCropperScreen> {
     HapticFeedback.mediumImpact();
 
     try {
-      final boundary = _cropBoundaryKey.currentContext?.findRenderObject()
-          as RenderRepaintBoundary?;
+      final boundary =
+          _cropBoundaryKey.currentContext?.findRenderObject()
+              as RenderRepaintBoundary?;
       if (boundary == null) {
         setState(() => _isSaving = false);
         return;
       }
 
       final ui.Image image = await boundary.toImage(pixelRatio: 2.5);
-      final ByteData? byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
+      final ByteData? byteData = await image.toByteData(
+        format: ui.ImageByteFormat.png,
+      );
       if (byteData == null) {
         setState(() => _isSaving = false);
         return;
@@ -104,9 +107,8 @@ class _SquareImageCropperScreenState extends State<SquareImageCropperScreen> {
         ),
         title: Text(
           "Crop Goal Photo (1:1)",
-          style: AppTextStyle.headingSmall(context).copyWith(
-            color: AppColors.baseWhite,
-          ),
+          style: AppTextStyle.headingSmall(context)
+              .copyWith(color: AppColors.baseWhite),
         ),
         actions: [
           TextButton(
@@ -171,8 +173,9 @@ class _SquareImageCropperScreenState extends State<SquareImageCropperScreen> {
                             ),
                             child: CustomPaint(
                               painter: _SquareCropGridPainter(
-                                gridColor:
-                                    AppColors.leafSoft.withValues(alpha: 0.45),
+                                gridColor: AppColors.leafSoft.withValues(
+                                  alpha: 0.45,
+                                ),
                               ),
                             ),
                           ),
@@ -229,9 +232,8 @@ class _SquareImageCropperScreenState extends State<SquareImageCropperScreen> {
                     onPressed: _resetTransform,
                     child: Text(
                       "Reset",
-                      style: AppTextStyle.bodySemiBold(context).copyWith(
-                        color: AppColors.textSecondary,
-                      ),
+                      style: AppTextStyle.bodySemiBold(context)
+                          .copyWith(color: AppColors.textSecondary),
                     ),
                   ),
                 ],

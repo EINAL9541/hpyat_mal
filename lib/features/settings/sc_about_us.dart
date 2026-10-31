@@ -1,10 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hpyat_mal/core/extensions/context_extensions.dart';
 import 'package:hpyat_mal/core/generate/locale_keys.g.dart';
 import 'package:hpyat_mal/core/theme/app_color.dart';
 import 'package:hpyat_mal/core/theme/app_text_style.dart';
+import 'package:hpyat_mal/core/ui/widgets/wd_app_page_app_bar.dart';
 import 'package:hpyat_mal/features/settings/_widget/wd_about_info_card.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -17,36 +17,7 @@ class AboutUsScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.surface,
-      appBar: AppBar(
-        backgroundColor: AppColors.surface,
-        surfaceTintColor: Colors.transparent,
-        scrolledUnderElevation: 0.5,
-        shadowColor: AppColors.border,
-        elevation: 0,
-        centerTitle: true,
-        leading: IconButton(
-          onPressed: () => context.pop(),
-          icon: Icon(
-            LucideIcons.chevronLeft,
-            color: AppColors.forestPrimary,
-            size: context.w(24),
-          ),
-        ),
-        title: Text(
-          LocaleKeys.settings_aboutUsTitle.tr(),
-          style: AppTextStyle.headingSmall(context).copyWith(
-            color: AppColors.forestDeep,
-          ),
-        ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1),
-          child: Divider(
-            height: 1,
-            thickness: 1,
-            color: AppColors.borderSubtle,
-          ),
-        ),
-      ),
+      appBar: AppPageAppBarWidget(title: LocaleKeys.settings_aboutUsTitle.tr()),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.fromLTRB(
@@ -94,9 +65,7 @@ class AboutUsScreen extends StatelessWidget {
                     ),
                     SizedBox(height: context.h(4)),
                     ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minHeight: context.h(44),
-                      ),
+                      constraints: BoxConstraints(minHeight: context.h(44)),
                       child: Center(
                         child: Text(
                           LocaleKeys.settings_aboutTagline.tr(),
@@ -114,7 +83,7 @@ class AboutUsScreen extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: context.w(14),
-                        vertical: context.h(4),
+                        vertical: context.h(6),
                       ),
                       decoration: BoxDecoration(
                         color: Colors.transparent,
@@ -123,10 +92,15 @@ class AboutUsScreen extends StatelessWidget {
                       ),
                       child: Text(
                         "★ ${LocaleKeys.splash_version.tr()}",
+                        textHeightBehavior: const TextHeightBehavior(
+                          applyHeightToFirstAscent: false,
+                          applyHeightToLastDescent: false,
+                        ),
                         style: AppTextStyle.captionMedium(context).copyWith(
                           color: AppColors.amberWarm,
                           fontWeight: FontWeight.w700,
                           fontSize: 13,
+                          height: 1.0,
                         ),
                       ),
                     ),

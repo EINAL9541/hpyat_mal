@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hpyat_mal/core/generate/locale_keys.g.dart';
 import 'package:hpyat_mal/core/services/storage_service.dart';
 import 'package:hpyat_mal/features/forest/_provider/forest_provider.dart';
 
@@ -32,15 +35,15 @@ class BreathingState {
   String get instruction {
     switch (phase) {
       case BreathPhase.ready:
-        return 'Tap to begin 4-7-8 calming breath';
+        return LocaleKeys.breathing_instructReady.tr();
       case BreathPhase.inhale:
-        return 'Inhale slowly through your nose...';
+        return LocaleKeys.breathing_instructInhale.tr();
       case BreathPhase.hold:
-        return 'Hold your breath gently...';
+        return LocaleKeys.breathing_instructHold.tr();
       case BreathPhase.exhale:
-        return 'Exhale completely through mouth...';
+        return LocaleKeys.breathing_instructExhale.tr();
       case BreathPhase.completed:
-        return 'Craving defused. Forest nourished!';
+        return LocaleKeys.breathing_instructCompleted.tr();
     }
   }
 
@@ -82,6 +85,7 @@ class BreathingNotifier extends Notifier<BreathingState> {
 
   void startSession() {
     _timer?.cancel();
+    HapticFeedback.mediumImpact();
     state = state.copyWith(
       phase: BreathPhase.inhale,
       secondsLeftInPhase: 4,
@@ -95,6 +99,7 @@ class BreathingNotifier extends Notifier<BreathingState> {
 
   void stopSession() {
     _timer?.cancel();
+    HapticFeedback.selectionClick();
     state = state.copyWith(
       phase: BreathPhase.ready,
       isRunning: false,
@@ -109,7 +114,8 @@ class BreathingNotifier extends Notifier<BreathingState> {
       return;
     }
 
-    // Transition between 4-7-8 stages
+    // Transition between 4-7-8 stages with gentle haptic cue
+    HapticFeedback.lightImpact();
     switch (state.phase) {
       case BreathPhase.inhale:
         state = state.copyWith(
@@ -144,9 +150,9 @@ class BreathingNotifier extends Notifier<BreathingState> {
 
   Future<void> _completeSession() async {
     _timer?.cancel();
+    HapticFeedback.mediumImpact();
     final storage = ref.read(storageServiceProvider);
     await storage.incrementBreathingSessions();
-    // Reward forest with vitality
     await ref.read(forestProvider.notifier).boostVitality();
 
     state = state.copyWith(
@@ -158,4 +164,6 @@ class BreathingNotifier extends Notifier<BreathingState> {
 }
 
 final breathingProvider =
-    NotifierProvider<BreathingNotifier, BreathingState>(BreathingNotifier.new);
+    NotifierProvider.autoDispose<BreathingNotifier, BreathingState>(
+      BreathingNotifier.new,
+    );

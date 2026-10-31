@@ -34,10 +34,10 @@ class AppSectionHeaderWidget extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: titleStyle ??
-                    AppTextStyle.headingMedium(context).copyWith(
-                      color: AppColors.forestPrimary,
-                    ),
+                style:
+                    titleStyle ??
+                    AppTextStyle.headingMedium(context)
+                        .copyWith(color: AppColors.forestPrimary),
               ),
               if (subtitle != null) ...[
                 SizedBox(height: context.h(2)),
@@ -49,10 +49,7 @@ class AppSectionHeaderWidget extends StatelessWidget {
             ],
           ),
         ),
-        if (trailing != null) ...[
-          SizedBox(width: context.w(12)),
-          trailing!,
-        ],
+        if (trailing != null) ...[SizedBox(width: context.w(12)), trailing!],
       ],
     );
 

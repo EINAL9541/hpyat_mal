@@ -60,17 +60,20 @@ class AppTextFieldWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveKeyboardType = keyboardType ??
+    final effectiveKeyboardType =
+        keyboardType ??
         (isNumber
             ? TextInputType.numberWithOptions(decimal: allowDecimal)
             : TextInputType.text);
 
-    final effectiveFormatters = inputFormatters ??
+    final effectiveFormatters =
+        inputFormatters ??
         (isNumber && !allowDecimal
             ? [FilteringTextInputFormatter.digitsOnly]
             : null);
 
-    final Widget? effectiveSuffixIcon = suffixIcon ??
+    final Widget? effectiveSuffixIcon =
+        suffixIcon ??
         (unit != null
             ? Padding(
                 padding: EdgeInsets.only(
@@ -100,20 +103,20 @@ class AppTextFieldWidget extends StatelessWidget {
       autofocus: autofocus,
       onChanged: onChanged,
       onSubmitted: onSubmitted,
-      style: style ??
-          AppTextStyle.bodySemiBold(context).copyWith(
-            color: AppColors.textPrimary,
-            fontSize: 16,
-          ),
+      style:
+          style ??
+          AppTextStyle.bodySemiBold(context)
+              .copyWith(color: AppColors.textPrimary, fontSize: 16),
       decoration: InputDecoration(
         labelText: labelText,
-        labelStyle:
-            labelText != null ? AppTextStyle.captionMedium(context) : null,
+        labelStyle: labelText != null
+            ? AppTextStyle.captionMedium(context)
+            : null,
         hintText: hintText,
-        hintStyle: hintStyle ??
-            AppTextStyle.bodyMedium(context).copyWith(
-              color: AppColors.textMuted.withValues(alpha: 0.7),
-            ),
+        hintStyle:
+            hintStyle ??
+            AppTextStyle.bodyMedium(context)
+                .copyWith(color: AppColors.textMuted.withValues(alpha: 0.7)),
         prefixIcon: prefixIcon,
         suffixIconConstraints: unit != null
             ? const BoxConstraints(minWidth: 0, minHeight: 0)
@@ -121,7 +124,8 @@ class AppTextFieldWidget extends StatelessWidget {
         suffixIcon: effectiveSuffixIcon,
         filled: true,
         fillColor: fillColor ?? AppColors.surfaceCard,
-        contentPadding: contentPadding ??
+        contentPadding:
+            contentPadding ??
             EdgeInsets.symmetric(
               horizontal: context.w(16),
               vertical: context.h(14),
@@ -151,11 +155,10 @@ class AppTextFieldWidget extends StatelessWidget {
       children: [
         Text(
           label!,
-          style: labelStyle ??
-              AppTextStyle.bodySemiBold(context).copyWith(
-                color: AppColors.forestDeep,
-                fontSize: 14.5,
-              ),
+          style:
+              labelStyle ??
+              AppTextStyle.bodySemiBold(context)
+                  .copyWith(color: AppColors.forestDeep, fontSize: 14.5),
         ),
         SizedBox(height: context.h(8)),
         field,

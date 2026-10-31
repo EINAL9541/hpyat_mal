@@ -116,7 +116,7 @@ class PlantSeedStepWidget extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: context.w(12),
-                      vertical: context.h(4),
+                      vertical: context.h(6),
                     ),
                     decoration: BoxDecoration(
                       color: AppColors.amberLight,
@@ -127,10 +127,15 @@ class PlantSeedStepWidget extends StatelessWidget {
                       "★ ${LocaleKeys.onboarding_readyGreeting.tr(args: [displayName])}",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
+                      textHeightBehavior: const TextHeightBehavior(
+                        applyHeightToFirstAscent: false,
+                        applyHeightToLastDescent: false,
+                      ),
                       style: AppTextStyle.captionMedium(context).copyWith(
                         color: AppColors.forestDeep,
                         fontWeight: FontWeight.w700,
                         fontSize: 13,
+                        height: 1.0,
                       ),
                     ),
                   ),
@@ -399,15 +404,19 @@ class PlantSeedStepWidget extends StatelessWidget {
                               children: [
                                 Text(
                                   "★ ${LocaleKeys.onboarding_anchorReasonTitle.tr()}",
+                                  textHeightBehavior: const TextHeightBehavior(
+                                    applyHeightToFirstAscent: false,
+                                    applyHeightToLastDescent: false,
+                                  ),
                                   style: AppTextStyle.captionMedium(context)
                                       .copyWith(
                                     color: AppColors.forestDeep,
                                     fontWeight: FontWeight.w700,
                                     fontSize: 12.5,
-                                    height: 1.4,
+                                    height: 1.0,
                                   ),
                                 ),
-                                SizedBox(height: context.h(3)),
+                                SizedBox(height: context.h(5)),
                                 Text(
                                   effectiveWhy,
                                   maxLines: 2,

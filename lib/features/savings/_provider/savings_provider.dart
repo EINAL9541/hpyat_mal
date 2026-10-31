@@ -12,10 +12,8 @@ class SavingsState {
   List<WishlistItem> get completedItems =>
       wishlist.where((item) => item.isCompleted).toList();
 
-  double get claimedTotal => completedItems.fold(
-        0.0,
-        (sum, item) => sum + item.targetAmount,
-      );
+  double get claimedTotal =>
+      completedItems.fold(0.0, (sum, item) => sum + item.targetAmount);
 }
 
 class SavingsNotifier extends Notifier<SavingsState> {
@@ -50,6 +48,7 @@ class SavingsNotifier extends Notifier<SavingsState> {
     required String iconKey,
     String? imagePath,
     required bool isCompleted,
+    DateTime? claimedAt,
   }) async {
     final storage = ref.read(storageServiceProvider);
     final updated = WishlistItem(
@@ -59,6 +58,7 @@ class SavingsNotifier extends Notifier<SavingsState> {
       iconKey: iconKey,
       imagePath: imagePath,
       isCompleted: isCompleted,
+      claimedAt: claimedAt,
     );
     await storage.updateWishlistItem(updated);
     state = SavingsState(wishlist: storage.getWishlist());
@@ -77,5 +77,6 @@ class SavingsNotifier extends Notifier<SavingsState> {
   }
 }
 
-final savingsProvider =
-    NotifierProvider<SavingsNotifier, SavingsState>(SavingsNotifier.new);
+final savingsProvider = NotifierProvider<SavingsNotifier, SavingsState>(
+  SavingsNotifier.new,
+);

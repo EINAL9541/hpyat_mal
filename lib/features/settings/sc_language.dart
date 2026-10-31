@@ -1,13 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hpyat_mal/core/extensions/context_extensions.dart';
 import 'package:hpyat_mal/core/generate/locale_keys.g.dart';
 import 'package:hpyat_mal/core/theme/app_color.dart';
 import 'package:hpyat_mal/core/theme/app_text_style.dart';
+import 'package:hpyat_mal/core/ui/widgets/wd_app_page_app_bar.dart';
 import 'package:hpyat_mal/features/settings/_widget/wd_language_choice_card.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class LanguageScreen extends StatelessWidget {
   const LanguageScreen({super.key});
@@ -18,23 +17,8 @@ class LanguageScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.surface,
-      appBar: AppBar(
-        backgroundColor: AppColors.surface,
-        elevation: 0,
-        centerTitle: true,
-        leading: IconButton(
-          onPressed: () => context.pop(),
-          icon: Icon(
-            LucideIcons.chevronLeft,
-            color: AppColors.forestPrimary,
-            size: context.w(24),
-          ),
-        ),
-        title: Text(
-          LocaleKeys.settings_languageTitle.tr(),
-          style: AppTextStyle.headingSmall(context)
-              .copyWith(color: AppColors.forestDeep),
-        ),
+      appBar: AppPageAppBarWidget(
+        title: LocaleKeys.settings_languageTitle.tr(),
       ),
       body: SafeArea(
         child: SingleChildScrollView(

@@ -51,10 +51,6 @@ class _ForestCanvasWidgetState extends State<ForestCanvasWidget>
   final List<_BurstPetal> _burstPetals = [];
   final math.Random _rng = math.Random();
 
-  // Speed-up Growth Preview state
-  bool _isSimulatingGrowth = false;
-  double? _previewGrowthOverride; // 0.0 (Day 0 Sprout) -> 1.0 (Day 25+ Sanctuary)
-
   @override
   void initState() {
     super.initState();
@@ -69,50 +65,7 @@ class _ForestCanvasWidgetState extends State<ForestCanvasWidget>
     return 1.0;
   }
 
-  double get _effectiveGrowth =>
-      _previewGrowthOverride ?? _daysToGrowth(widget.days);
-
-  String _stageLabelForGrowth(double g) {
-    final isCherry = widget.plantTheme.isCherry;
-    if (g < 0.28) {
-      return isCherry
-          ? 'Stage 1 • Sakura Sprout (Day 0)'
-          : 'Stage 1 • Emerald Sprout (Day 0)';
-    }
-    if (g < 0.52) {
-      return isCherry
-          ? 'Stage 2 • Cherry Sapling (Days 1–3)'
-          : 'Stage 2 • Forest Sapling (Days 1–3)';
-    }
-    if (g < 0.76) {
-      return isCherry
-          ? 'Stage 3 • Blooming Sakura (Days 4–9)'
-          : 'Stage 3 • Lush Canopy (Days 4–9)';
-    }
-    if (g < 0.93) {
-      return isCherry
-          ? 'Stage 4 • Imperial Sakura (Days 10–20)'
-          : 'Stage 4 • Woodland Guardian (Days 10–20)';
-    }
-    return isCherry
-        ? 'Stage 5 • Sacred Sakura (Day 21+)'
-        : 'Stage 5 • Sacred Emerald (Day 21+)';
-  }
-
-  void _startSpeedUpGrowth() {
-    setState(() {
-      _isSimulatingGrowth = true;
-      _previewGrowthOverride = 0.05;
-      _windGust = 0.7;
-    });
-  }
-
-  void _stopPreview() {
-    setState(() {
-      _isSimulatingGrowth = false;
-      _previewGrowthOverride = null;
-    });
-  }
+  double get _effectiveGrowth => _daysToGrowth(widget.days);
 
   void _onTick(Duration elapsed) {
     final dt = _lastElapsed == Duration.zero
@@ -122,25 +75,6 @@ class _ForestCanvasWidgetState extends State<ForestCanvasWidget>
 
     final clampedDt = dt.clamp(0.0, 0.05);
     _time += clampedDt;
-
-    if (_isSimulatingGrowth && _previewGrowthOverride != null) {
-      // Smoothly grow from 0.05 to 1.0 over ~7.5 seconds
-      final prev = _previewGrowthOverride!;
-      final next = (prev + clampedDt * 0.13).clamp(0.05, 1.0);
-      _previewGrowthOverride = next;
-
-      // Trigger celebratory blossom bursts as it crosses stage thresholds
-      if ((prev < 0.30 && next >= 0.30) ||
-          (prev < 0.55 && next >= 0.55) ||
-          (prev < 0.80 && next >= 0.80) ||
-          (prev < 0.98 && next >= 0.98)) {
-        _windGust = 0.85;
-      }
-
-      if (next >= 1.0) {
-        _isSimulatingGrowth = false;
-      }
-    }
 
     if (_windGust > 0.001) {
       _windGust *= math.pow(0.22, clampedDt).toDouble();
@@ -249,9 +183,6 @@ class _ForestCanvasWidgetState extends State<ForestCanvasWidget>
   Widget build(BuildContext context) {
     final growth = _effectiveGrowth;
     final isCherry = widget.plantTheme.isCherry;
-    final accentColor = AppColors.emerald;
-    final borderColor = AppColors.border;
-    final deepTextColor = AppColors.forestDeep;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -259,7 +190,6 @@ class _ForestCanvasWidgetState extends State<ForestCanvasWidget>
         return GestureDetector(
           onTapDown: (details) =>
               _triggerBreeze(details.localPosition, canvasSize),
-          onLongPress: _startSpeedUpGrowth,
           child: Container(
             height: 275,
             width: double.infinity,
@@ -269,108 +199,16 @@ class _ForestCanvasWidgetState extends State<ForestCanvasWidget>
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16),
-              child: Stack(
-                children: [
-                  CustomPaint(
-                    size: canvasSize,
-                    painter: _SakuraTreePainter(
-                      growth: growth,
-                      vitality: widget.vitality,
-                      time: _time,
-                      windGust: _windGust,
-                      burstPetals: _burstPetals,
-                      isCherry: isCherry,
-                    ),
-                  ),
-
-                  // Growth Preview Overlay Controls (only visible when long-press preview is active)
-                  if (_previewGrowthOverride != null)
-                    Positioned(
-                      left: 12,
-                      top: 12,
-                      right: 12,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 5,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.surfaceCard.withValues(alpha: 0.92),
-                              borderRadius: BorderRadius.circular(50),
-                              border: Border.all(
-                                color: accentColor,
-                              ),
-                            ),
-                            child: Text(
-                              _stageLabelForGrowth(growth),
-                              style: TextStyle(
-                                fontSize: 10.5,
-                                fontWeight: FontWeight.w700,
-                                color: deepTextColor,
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: _stopPreview,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 5,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.forestDeep,
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                              child: const Text(
-                                "✕ Exit Preview",
-                                style: TextStyle(
-                                  fontSize: 10.5,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                  // Subtle interactive hint pill
-                  if (_previewGrowthOverride == null)
-                    Positioned(
-                      right: 12,
-                      bottom: 10,
-                      child: IgnorePointer(
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 11,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.surfaceCard.withValues(alpha: 0.85),
-                            borderRadius: BorderRadius.circular(50),
-                            border: Border.all(
-                              color: borderColor.withValues(alpha: 0.6),
-                            ),
-                          ),
-                          child: Text(
-                            isCherry
-                                ? "Tap for Sakura Breeze • Hold to preview growth"
-                                : "Tap for Forest Breeze • Hold to preview growth",
-                            style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w600,
-                              color: deepTextColor,
-                              letterSpacing: -0.1,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
+              child: CustomPaint(
+                size: canvasSize,
+                painter: _SakuraTreePainter(
+                  growth: growth,
+                  vitality: widget.vitality,
+                  time: _time,
+                  windGust: _windGust,
+                  burstPetals: _burstPetals,
+                  isCherry: isCherry,
+                ),
               ),
             ),
           ),
@@ -476,7 +314,7 @@ class _SakuraTreePainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5;
     canvas.drawRRect(
-      RRect.fromRectAndRadius(rect.deflate(0.75), const Radius.circular(28)),
+      RRect.fromRectAndRadius(rect.deflate(0.75), const Radius.circular(16)),
       borderPaint,
     );
 

@@ -1,9 +1,12 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:hpyat_mal/core/extensions/context_extensions.dart';
+import 'package:hpyat_mal/core/generate/locale_keys.g.dart';
 import 'package:hpyat_mal/core/theme/app_color.dart';
 import 'package:hpyat_mal/core/theme/app_text_style.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class DailyNourishCardWidget extends StatelessWidget {
   const DailyNourishCardWidget({super.key});
@@ -11,8 +14,11 @@ class DailyNourishCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => context.go('/breathing'),
-      borderRadius: context.borderRadius(all: 12),
+      onTap: () {
+        HapticFeedback.selectionClick();
+        context.go('/breathing');
+      },
+      borderRadius: context.borderRadius(all: 14),
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.symmetric(
@@ -21,15 +27,15 @@ class DailyNourishCardWidget extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: AppColors.surfaceCard,
-          borderRadius: context.borderRadius(all: 12),
+          borderRadius: context.borderRadius(all: 14),
           border: Border.all(color: AppColors.borderSubtle),
           boxShadow: AppColors.cardShadow,
         ),
         child: Row(
           children: [
             Container(
-              width: context.w(38),
-              height: context.w(38),
+              width: context.w(40),
+              height: context.w(40),
               decoration: BoxDecoration(
                 color: AppColors.leafSoft,
                 shape: BoxShape.circle,
@@ -46,7 +52,7 @@ class DailyNourishCardWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Feeling a craving right now?",
+                    LocaleKeys.forest_cravingCardTitle.tr(),
                     style: AppTextStyle.bodySemiBold(context).copyWith(
                       color: AppColors.forestDeep,
                       fontSize: 14.5,
@@ -54,9 +60,10 @@ class DailyNourishCardWidget extends StatelessWidget {
                   ),
                   SizedBox(height: context.h(2)),
                   Text(
-                    "Urges pass in 3 minutes. Take a guided 4-7-8 breath.",
+                    LocaleKeys.forest_cravingCardSubtitle.tr(),
                     style: AppTextStyle.captionSmall(context).copyWith(
                       color: AppColors.textSecondary,
+                      height: 1.4,
                     ),
                   ),
                 ],

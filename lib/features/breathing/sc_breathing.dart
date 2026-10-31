@@ -1,18 +1,36 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:hpyat_mal/core/extensions/context_extensions.dart';
+import 'package:hpyat_mal/core/generate/locale_keys.g.dart';
 import 'package:hpyat_mal/core/theme/app_color.dart';
 import 'package:hpyat_mal/core/theme/app_text_style.dart';
 import 'package:hpyat_mal/features/breathing/_provider/breathing_provider.dart';
 import 'package:hpyat_mal/features/breathing/_widget/wd_breathing_circle.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class BreathingScreen extends ConsumerWidget {
   const BreathingScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    EasyLocalization.of(context);
     final breathing = ref.watch(breathingProvider);
+    final isCompleted = breathing.phase == BreathPhase.completed;
+
+    final String subtitleGuidance;
+    if (breathing.isRunning) {
+      subtitleGuidance = LocaleKeys.breathing_subGuiding.tr(
+        args: [
+          breathing.currentCycle.toString(),
+          breathing.totalCycles.toString(),
+        ],
+      );
+    } else if (isCompleted) {
+      subtitleGuidance = LocaleKeys.breathing_subCompleted.tr();
+    } else {
+      subtitleGuidance = LocaleKeys.breathing_subIdle.tr();
+    }
 
     return Scaffold(
       backgroundColor: AppColors.surface,
@@ -26,55 +44,32 @@ class BreathingScreen extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Consistent Tab Header with Starbucks Gold-outlined ceremony pill
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Calm Breath",
-                          style: AppTextStyle.headingLarge(context).copyWith(
-                            color: AppColors.forestPrimary,
-                            fontSize: 22,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        SizedBox(height: context.h(2)),
-                        Text(
-                          "4-7-8 rhythm to let cravings pass",
-                          style: AppTextStyle.captionMedium(context),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: context.w(12),
-                      vertical: context.h(5),
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.amberLight,
-                      borderRadius: context.borderRadius(all: 50),
-                      border: Border.all(color: AppColors.amberWarm),
-                    ),
-                    child: Text(
-                      "★ ${breathing.completedSessions} sessions",
-                      style: AppTextStyle.captionSmall(context).copyWith(
-                        color: AppColors.forestDeep,
-                        fontWeight: FontWeight.w700,
+              // 1. Clean Page Header (Left-aligned, no sessions badge)
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      LocaleKeys.breathing_title.tr(),
+                      style: AppTextStyle.headingLarge(context).copyWith(
+                        color: AppColors.forestPrimary,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                  ),
-                ],
+                    SizedBox(height: context.h(2)),
+                    Text(
+                      LocaleKeys.breathing_subtitle.tr(),
+                      style: AppTextStyle.captionMedium(context),
+                    ),
+                  ],
+                ),
               ),
 
               SizedBox(height: context.h(28)),
 
-              // Clean Typographic Phase Guidance
+              // 2. Clean Typographic Phase Guidance
               Text(
                 breathing.instruction,
                 textAlign: TextAlign.center,
@@ -85,18 +80,16 @@ class BreathingScreen extends ConsumerWidget {
               ),
               SizedBox(height: context.h(4)),
               Text(
-                breathing.isRunning
-                    ? "Cycle ${breathing.currentCycle} of ${breathing.totalCycles} • Follow the sphere"
-                    : "Tap the circle below whenever an urge peaks",
+                subtitleGuidance,
                 textAlign: TextAlign.center,
                 style: AppTextStyle.captionMedium(context).copyWith(
                   color: AppColors.textSecondary,
                 ),
               ),
 
-              SizedBox(height: context.h(28)),
+              SizedBox(height: context.h(16)),
 
-              // Expanding / Contracting Sphere
+              // 3. Expanding / Contracting Sphere (Contained inside 280x280 box)
               BreathingCircleWidget(
                 state: breathing,
                 onToggle: () {
@@ -108,15 +101,17 @@ class BreathingScreen extends ConsumerWidget {
                 },
               ),
 
-              SizedBox(height: context.h(28)),
+              SizedBox(height: context.h(16)),
 
-              // Cycle Indicators
+              // 4. Cycle Indicators
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(breathing.totalCycles, (index) {
-                  final isDone = index + 1 < breathing.currentCycle ||
+                  final isDone =
+                      index + 1 < breathing.currentCycle ||
                       breathing.phase == BreathPhase.completed;
-                  final isCurrent = index + 1 == breathing.currentCycle &&
+                  final isCurrent =
+                      index + 1 == breathing.currentCycle &&
                       breathing.isRunning;
 
                   return AnimatedContainer(
@@ -134,64 +129,62 @@ class BreathingScreen extends ConsumerWidget {
                 }),
               ),
 
-              SizedBox(height: context.h(18)),
-
-              // 50px Full-Pill Primary CTA (Starbucks Green Accent / Sakura Accent)
-              ElevatedButton.icon(
-                onPressed: () {
-                  if (breathing.isRunning) {
-                    ref.read(breathingProvider.notifier).stopSession();
-                  } else {
-                    ref.read(breathingProvider.notifier).startSession();
-                  }
-                },
-                icon: Icon(
-                  breathing.isRunning ? LucideIcons.square : LucideIcons.play,
-                  size: context.w(15),
-                ),
-                label: Text(
-                  breathing.isRunning ? "Pause Session" : "Begin 4-7-8 Breath",
-                  style: AppTextStyle.bodySemiBold(context).copyWith(
-                    color: AppColors.baseWhite,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: breathing.isRunning
-                      ? AppColors.forestDeep
-                      : AppColors.emerald,
-                  foregroundColor: AppColors.baseWhite,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: context.w(28),
-                    vertical: context.h(13),
-                  ),
-                  shape: const StadiumBorder(),
-                  elevation: 0,
-                ),
-              ),
-
               SizedBox(height: context.h(24)),
 
-              // Subtle Science Card on White Surface
+              // 5. Science Card on White Surface
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.all(context.w(16)),
                 decoration: BoxDecoration(
                   color: AppColors.surfaceCard,
-                  borderRadius: context.borderRadius(all: 12),
+                  borderRadius: context.borderRadius(all: 14),
                   border: Border.all(color: AppColors.borderSubtle),
                   boxShadow: AppColors.cardShadow,
                 ),
-                child: Text(
-                  "Inhaling for 4s, holding for 7s, and exhaling for 8s slows your heart rate within 90 seconds—giving the craving wave time to pass.",
-                  textAlign: TextAlign.center,
-                  style: AppTextStyle.captionMedium(context).copyWith(
-                    color: AppColors.textSecondary,
-                    height: 1.55,
-                  ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: context.w(36),
+                      height: context.w(36),
+                      decoration: BoxDecoration(
+                        color: AppColors.leafSoft,
+                        borderRadius: context.borderRadius(all: 10),
+                      ),
+                      child: Icon(
+                        LucideIcons.heartPulse,
+                        size: context.w(18),
+                        color: AppColors.forestPrimary,
+                      ),
+                    ),
+                    SizedBox(width: context.w(12)),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            LocaleKeys.breathing_scienceTitle.tr(),
+                            style: AppTextStyle.bodySemiBold(context).copyWith(
+                              color: AppColors.forestDeep,
+                              fontSize: 14.5,
+                            ),
+                          ),
+                          SizedBox(height: context.h(3)),
+                          Text(
+                            LocaleKeys.breathing_scienceBody.tr(),
+                            style: AppTextStyle.captionMedium(context).copyWith(
+                              color: AppColors.textSecondary,
+                              height: 1.5,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
 
-              SizedBox(height: context.h(24)),
+              SizedBox(height: context.h(85)),
             ],
           ),
         ),

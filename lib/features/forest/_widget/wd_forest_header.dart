@@ -1,8 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:hpyat_mal/core/extensions/context_extensions.dart';
+import 'package:hpyat_mal/core/generate/locale_keys.g.dart';
 import 'package:hpyat_mal/core/theme/app_color.dart';
 import 'package:hpyat_mal/core/theme/app_text_style.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ForestHeaderWidget extends StatelessWidget {
   final String userName;
@@ -21,8 +23,7 @@ class ForestHeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isCherry = plantTheme.isCherry;
-    final isThriving = vitality >= 80;
-    final statusColor = isThriving ? AppColors.emerald : AppColors.amberWarm;
+    final trimmedName = userName.trim();
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -33,7 +34,9 @@ class ForestHeaderWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                userName.isNotEmpty ? "Hi, $userName" : "Your Sanctuary",
+                trimmedName.isNotEmpty
+                    ? LocaleKeys.forest_greetingNamed.tr(args: [trimmedName])
+                    : LocaleKeys.forest_greetingDefault.tr(),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: AppTextStyle.headingLarge(context).copyWith(
@@ -42,26 +45,36 @@ class ForestHeaderWidget extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              SizedBox(height: context.h(2)),
+              SizedBox(height: context.h(3)),
               Row(
                 mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
                     width: context.w(7),
                     height: context.w(7),
                     decoration: BoxDecoration(
-                      color: statusColor,
+                      color: AppColors.emerald,
                       shape: BoxShape.circle,
                     ),
                   ),
                   SizedBox(width: context.w(6)),
-                  Text(
-                    isThriving
-                        ? "${isCherry ? 'Sakura Sanctuary' : 'Emerald Sanctuary'} • $vitality% Vitality"
-                        : "Recovering • $vitality% Vitality",
-                    style: AppTextStyle.captionSmall(context).copyWith(
-                      color: AppColors.textSecondary,
-                      fontWeight: FontWeight.w600,
+                  Flexible(
+                    child: Text(
+                      isCherry
+                          ? LocaleKeys.forest_subtitleCherry.tr()
+                          : LocaleKeys.forest_subtitleEmerald.tr(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textHeightBehavior: const TextHeightBehavior(
+                        applyHeightToFirstAscent: false,
+                        applyHeightToLastDescent: false,
+                      ),
+                      style: AppTextStyle.captionMedium(context).copyWith(
+                        color: AppColors.textSecondary,
+                        fontWeight: FontWeight.w500,
+                        height: 1.0,
+                      ),
                     ),
                   ),
                 ],
@@ -69,6 +82,7 @@ class ForestHeaderWidget extends StatelessWidget {
             ],
           ),
         ),
+        SizedBox(width: context.w(12)),
         Container(
           decoration: BoxDecoration(
             color: AppColors.surfaceCard,
@@ -79,7 +93,7 @@ class ForestHeaderWidget extends StatelessWidget {
           child: IconButton(
             onPressed: onOpenSettings,
             icon: Icon(
-              LucideIcons.slidersHorizontal,
+              LucideIcons.settings,
               size: context.w(18),
               color: AppColors.forestDeep,
             ),

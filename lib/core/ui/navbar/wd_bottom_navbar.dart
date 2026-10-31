@@ -1,9 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:hpyat_mal/core/extensions/context_extensions.dart';
+import 'package:hpyat_mal/core/generate/locale_keys.g.dart';
 import 'package:hpyat_mal/core/theme/app_color.dart';
 import 'package:hpyat_mal/core/theme/app_text_style.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class BottomNavbarWidget extends StatelessWidget {
   final int selectedIndex;
@@ -17,6 +19,7 @@ class BottomNavbarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    EasyLocalization.of(context);
     final isBreathingSelected = selectedIndex == 4;
 
     return SafeArea(
@@ -47,7 +50,7 @@ class BottomNavbarWidget extends StatelessWidget {
                   Expanded(
                     child: _NavItem(
                       icon: LucideIcons.trees,
-                      label: "Forest",
+                      label: LocaleKeys.common_navForest.tr(),
                       isSelected: selectedIndex == 0,
                       onTap: () {
                         HapticFeedback.selectionClick();
@@ -58,7 +61,7 @@ class BottomNavbarWidget extends StatelessWidget {
                   Expanded(
                     child: _NavItem(
                       icon: LucideIcons.activity,
-                      label: "Healing",
+                      label: LocaleKeys.common_navHealing.tr(),
                       isSelected: selectedIndex == 1,
                       onTap: () {
                         HapticFeedback.selectionClick();
@@ -73,7 +76,7 @@ class BottomNavbarWidget extends StatelessWidget {
                   Expanded(
                     child: _NavItem(
                       icon: LucideIcons.bookOpen,
-                      label: "Journal",
+                      label: LocaleKeys.common_navJournal.tr(),
                       isSelected: selectedIndex == 2,
                       onTap: () {
                         HapticFeedback.selectionClick();
@@ -84,7 +87,7 @@ class BottomNavbarWidget extends StatelessWidget {
                   Expanded(
                     child: _NavItem(
                       icon: LucideIcons.piggyBank,
-                      label: "Savings",
+                      label: LocaleKeys.common_navSavings.tr(),
                       isSelected: selectedIndex == 3,
                       onTap: () {
                         HapticFeedback.selectionClick();
@@ -148,7 +151,7 @@ class BottomNavbarWidget extends StatelessWidget {
                     ),
                     SizedBox(height: context.h(2)),
                     Text(
-                      "Breathe",
+                      LocaleKeys.common_navBreathe.tr(),
                       style: AppTextStyle.captionSmall(context).copyWith(
                         color: isBreathingSelected
                             ? AppColors.forestPrimary
@@ -205,9 +208,7 @@ class _NavItem extends StatelessWidget {
               vertical: context.h(4),
             ),
             decoration: BoxDecoration(
-              color: isSelected
-                  ? AppColors.leafSoft
-                  : AppColors.transparent,
+              color: isSelected ? AppColors.leafSoft : AppColors.transparent,
               borderRadius: context.borderRadius(all: 50),
             ),
             child: Icon(

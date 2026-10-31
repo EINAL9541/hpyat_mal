@@ -1,6 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil_plus/flutter_screenutil_plus.dart';
 import 'package:hpyat_mal/core/extensions/context_extensions.dart';
+import 'package:hpyat_mal/core/generate/locale_keys.g.dart';
 import 'package:hpyat_mal/core/theme/app_color.dart';
 import 'package:hpyat_mal/core/theme/app_text_style.dart';
 import 'package:hpyat_mal/features/breathing/_provider/breathing_provider.dart';
@@ -19,10 +20,8 @@ class BreathingCircleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     // Determine target scale based on phase
     double targetScale = 1.0;
-    if (state.phase == BreathPhase.inhale) {
-      targetScale = 1.35;
-    } else if (state.phase == BreathPhase.hold) {
-      targetScale = 1.35;
+    if (state.phase == BreathPhase.inhale || state.phase == BreathPhase.hold) {
+      targetScale = 1.24;
     } else if (state.phase == BreathPhase.exhale) {
       targetScale = 1.0;
     }
@@ -34,23 +33,26 @@ class BreathingCircleWidget extends StatelessWidget {
       animDuration = const Duration(seconds: 8);
     }
 
+    // Reserve the full expanded diameter (190 * 1.24 * 1.12 ≈ 264) inside a
+    // 280x280 layout box so the expanding rings never overlap adjacent widgets.
     return Center(
       child: GestureDetector(
         onTap: onToggle,
+        behavior: HitTestBehavior.opaque,
         child: SizedBox(
-          width: context.w(260),
-          height: context.h(260),
+          width: context.w(280),
+          height: context.w(280),
           child: Stack(
             alignment: Alignment.center,
             children: [
               // Outer Solid Color-Block Ripple Ring (Light Mint / Sakura Wash)
               AnimatedScale(
-                scale: targetScale * 1.15,
+                scale: targetScale * 1.12,
                 duration: animDuration,
                 curve: Curves.easeInOut,
                 child: Container(
-                  width: context.w(230),
-                  height: context.h(230),
+                  width: context.w(190),
+                  height: context.w(190),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: AppColors.leafSoft,
@@ -61,15 +63,15 @@ class BreathingCircleWidget extends StatelessWidget {
 
               // Middle Solid Botanical Ring
               AnimatedScale(
-                scale: targetScale * 1.08,
+                scale: targetScale * 1.06,
                 duration: animDuration,
                 curve: Curves.easeInOut,
                 child: Container(
-                  width: context.w(190),
-                  height: context.h(190),
+                  width: context.w(162),
+                  height: context.w(162),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppColors.sageLight.withValues(alpha: 0.45),
+                    color: AppColors.sageLight.withValues(alpha: 0.42),
                   ),
                 ),
               ),
@@ -80,8 +82,8 @@ class BreathingCircleWidget extends StatelessWidget {
                 duration: animDuration,
                 curve: Curves.easeInOut,
                 child: Container(
-                  width: context.w(150),
-                  height: context.h(150),
+                  width: context.w(134),
+                  height: context.w(134),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: state.isRunning
@@ -90,28 +92,43 @@ class BreathingCircleWidget extends StatelessWidget {
                     boxShadow: AppColors.floatingShadow,
                   ),
                   child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          _phaseTitle(state.phase),
-                          style: AppTextStyle.captionSmall(context).copyWith(
-                            color: AppColors.leafSoft,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 1.2,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: context.w(10)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            _phaseTitle(state.phase),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTextStyle.captionSmall(context).copyWith(
+                              color: AppColors.leafSoft,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 0.8,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: context.h(2)),
-                        Text(
-                          state.isRunning
-                              ? "${state.secondsLeftInPhase}s"
-                              : "START",
-                          style: AppTextStyle.headingLarge(context).copyWith(
-                            color: AppColors.baseWhite,
-                            fontWeight: FontWeight.w700,
+                          SizedBox(height: context.h(4)),
+                          Text(
+                            state.isRunning
+                                ? LocaleKeys.breathing_secondsUnit.tr(
+                                    args: [
+                                      state.secondsLeftInPhase.toString(),
+                                    ],
+                                  )
+                                : LocaleKeys.breathing_startSphereLabel.tr(),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTextStyle.headingLarge(context).copyWith(
+                              color: AppColors.baseWhite,
+                              fontSize: state.isRunning ? 26 : 20,
+                              fontWeight: FontWeight.w700,
+                              fontFeatures: const [
+                                FontFeature.tabularFigures(),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -126,15 +143,15 @@ class BreathingCircleWidget extends StatelessWidget {
   String _phaseTitle(BreathPhase phase) {
     switch (phase) {
       case BreathPhase.ready:
-        return 'TAP';
+        return LocaleKeys.breathing_phaseReady.tr();
       case BreathPhase.inhale:
-        return 'INHALE';
+        return LocaleKeys.breathing_phaseInhale.tr();
       case BreathPhase.hold:
-        return 'HOLD';
+        return LocaleKeys.breathing_phaseHold.tr();
       case BreathPhase.exhale:
-        return 'EXHALE';
+        return LocaleKeys.breathing_phaseExhale.tr();
       case BreathPhase.completed:
-        return 'DONE';
+        return LocaleKeys.breathing_phaseDone.tr();
     }
   }
 }

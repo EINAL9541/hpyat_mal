@@ -153,9 +153,8 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
         ),
         title: Text(
           "Take Goal Photo",
-          style: AppTextStyle.headingSmall(context).copyWith(
-            color: AppColors.baseWhite,
-          ),
+          style: AppTextStyle.headingSmall(context)
+              .copyWith(color: AppColors.baseWhite),
         ),
         actions: [
           if (_cameras.length > 1)
@@ -198,7 +197,8 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   GestureDetector(
-                    onTap: (_isInitializing ||
+                    onTap:
+                        (_isInitializing ||
                             _errorMessage != null ||
                             _isTakingPicture)
                         ? null
@@ -240,11 +240,7 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
 
   Widget _buildCameraBody(BuildContext context) {
     if (_isInitializing) {
-      return Center(
-        child: CircularProgressIndicator(
-          color: AppColors.emerald,
-        ),
-      );
+      return Center(child: CircularProgressIndicator(color: AppColors.emerald));
     }
 
     if (_errorMessage != null ||
@@ -265,9 +261,8 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
               Text(
                 _errorMessage ?? "Camera unavailable",
                 textAlign: TextAlign.center,
-                style: AppTextStyle.bodyMedium(context).copyWith(
-                  color: AppColors.baseWhite,
-                ),
+                style: AppTextStyle.bodyMedium(context)
+                    .copyWith(color: AppColors.baseWhite),
               ),
             ],
           ),

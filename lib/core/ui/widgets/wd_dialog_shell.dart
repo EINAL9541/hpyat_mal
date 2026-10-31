@@ -53,28 +53,21 @@ class AppDialogShellWidget extends StatelessWidget {
                     Expanded(
                       child: Text(
                         title!,
-                        style: AppTextStyle.headingSmall(context).copyWith(
-                          color: AppColors.forestDeep,
-                        ),
+                        style: AppTextStyle.headingSmall(context)
+                            .copyWith(color: AppColors.forestDeep),
                       ),
                     ),
                 ],
               ),
             if (subtitle != null) ...[
               SizedBox(height: context.h(6)),
-              Text(
-                subtitle!,
-                style: AppTextStyle.captionMedium(context),
-              ),
+              Text(subtitle!, style: AppTextStyle.captionMedium(context)),
             ],
             SizedBox(height: context.h(14)),
             content,
             if (actions != null && actions!.isNotEmpty) ...[
               SizedBox(height: context.h(18)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: actions!,
-              ),
+              Row(mainAxisAlignment: MainAxisAlignment.end, children: actions!),
             ],
           ],
         ),

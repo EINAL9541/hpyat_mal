@@ -8,10 +8,7 @@ import 'package:hpyat_mal/core/theme/app_text_style.dart';
 class LanguageSwitchButton extends StatelessWidget {
   final bool isCompact;
 
-  const LanguageSwitchButton({
-    super.key,
-    this.isCompact = false,
-  });
+  const LanguageSwitchButton({super.key, this.isCompact = false});
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +20,7 @@ class LanguageSwitchButton extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surfaceCard,
         borderRadius: context.borderRadius(all: 50),
-        border: Border.all(
-          color: AppColors.border,
-          width: 1,
-        ),
+        border: Border.all(color: AppColors.border, width: 1),
         boxShadow: AppColors.cardShadow,
       ),
       child: Row(

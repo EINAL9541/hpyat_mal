@@ -9,8 +9,12 @@ class JournalState {
 
   int get totalCravings => logs.length;
   int get resistedCount => logs.where((l) => l.resisted).length;
+  int get slipCount => logs.where((l) => !l.resisted).length;
   double get resistanceRate =>
       totalCravings == 0 ? 100.0 : (resistedCount / totalCravings) * 100.0;
+
+  List<CravingLog> get resistedLogs => logs.where((l) => l.resisted).toList();
+  List<CravingLog> get slipLogs => logs.where((l) => !l.resisted).toList();
 
   Map<String, int> get triggerCounts {
     final map = <String, int>{};
@@ -47,13 +51,35 @@ class JournalNotifier extends Notifier<JournalState> {
     await storage.saveCravingLog(newLog);
 
     if (resisted) {
-      // Reward with vitality
       await ref.read(forestProvider.notifier).boostVitality();
     } else {
-      // Soft slip - fog covers forest, encourage quick reset
       await ref.read(forestProvider.notifier).recordSlip();
     }
 
+    state = JournalState(logs: storage.getCravingLogs());
+  }
+
+  Future<void> updateCravingLog({
+    required CravingLog existing,
+    required String trigger,
+    required int intensity,
+    required bool resisted,
+    required String note,
+  }) async {
+    final storage = ref.read(storageServiceProvider);
+    final updated = existing.copyWith(
+      trigger: trigger,
+      intensity: intensity,
+      resisted: resisted,
+      note: note,
+    );
+    await storage.updateCravingLog(updated);
+    state = JournalState(logs: storage.getCravingLogs());
+  }
+
+  Future<void> deleteCravingLog(String id) async {
+    final storage = ref.read(storageServiceProvider);
+    await storage.deleteCravingLog(id);
     state = JournalState(logs: storage.getCravingLogs());
   }
 }

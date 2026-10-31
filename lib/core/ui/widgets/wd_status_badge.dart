@@ -33,7 +33,8 @@ class AppStatusBadgeWidget extends StatelessWidget {
     final bg = backgroundColor ?? AppColors.leafSoft;
 
     final badge = Container(
-      padding: padding ??
+      padding:
+          padding ??
           EdgeInsets.symmetric(
             horizontal: context.w(10),
             vertical: context.h(4),
@@ -54,21 +55,17 @@ class AppStatusBadgeWidget extends StatelessWidget {
           ],
           Text(
             label,
-            style: textStyle ??
-                AppTextStyle.captionSmall(context).copyWith(
-                  color: fgColor,
-                  fontWeight: FontWeight.w700,
-                ),
+            style:
+                textStyle ??
+                AppTextStyle.captionSmall(context)
+                    .copyWith(color: fgColor, fontWeight: FontWeight.w700),
           ),
         ],
       ),
     );
 
     if (onTap != null) {
-      return GestureDetector(
-        onTap: onTap,
-        child: badge,
-      );
+      return GestureDetector(onTap: onTap, child: badge);
     }
 
     return badge;

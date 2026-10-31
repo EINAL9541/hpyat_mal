@@ -7,6 +7,7 @@ import 'package:hpyat_mal/core/extensions/context_extensions.dart';
 import 'package:hpyat_mal/core/generate/locale_keys.g.dart';
 import 'package:hpyat_mal/core/theme/app_color.dart';
 import 'package:hpyat_mal/core/theme/app_text_style.dart';
+import 'package:hpyat_mal/core/ui/widgets/wd_app_page_app_bar.dart';
 import 'package:hpyat_mal/core/ui/widgets/wd_text_field.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -66,27 +67,8 @@ class FeedbackScreen extends HookWidget {
 
     return Scaffold(
       backgroundColor: AppColors.surface,
-      appBar: AppBar(
-        backgroundColor: AppColors.surface,
-        surfaceTintColor: Colors.transparent,
-        scrolledUnderElevation: 0.5,
-        shadowColor: AppColors.border,
-        elevation: 0,
-        centerTitle: true,
-        leading: IconButton(
-          onPressed: () => context.pop(),
-          icon: Icon(
-            LucideIcons.chevronLeft,
-            color: AppColors.forestPrimary,
-            size: context.w(24),
-          ),
-        ),
-        title: Text(
-          LocaleKeys.settings_feedbackTitle.tr(),
-          style: AppTextStyle.headingSmall(context).copyWith(
-            color: AppColors.forestDeep,
-          ),
-        ),
+      appBar: AppPageAppBarWidget(
+        title: LocaleKeys.settings_feedbackTitle.tr(),
       ),
       body: SafeArea(
         child: Column(

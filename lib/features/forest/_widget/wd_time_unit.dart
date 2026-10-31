@@ -6,11 +6,15 @@ import 'package:hpyat_mal/core/theme/app_text_style.dart';
 class TimeUnitWidget extends StatelessWidget {
   final String value;
   final String label;
+  final Color? valueColor;
+  final Color? labelColor;
 
   const TimeUnitWidget({
     super.key,
     required this.value,
     required this.label,
+    this.valueColor,
+    this.labelColor,
   });
 
   @override
@@ -21,7 +25,7 @@ class TimeUnitWidget extends StatelessWidget {
         Text(
           value,
           style: AppTextStyle.headingLarge(context).copyWith(
-            color: AppColors.forestDeep,
+            color: valueColor ?? AppColors.forestDeep,
             fontSize: 28,
             fontWeight: FontWeight.w700,
             letterSpacing: -0.5,
@@ -33,7 +37,7 @@ class TimeUnitWidget extends StatelessWidget {
         Text(
           label,
           style: AppTextStyle.captionSmall(context).copyWith(
-            color: AppColors.textMuted,
+            color: labelColor ?? AppColors.textMuted,
             fontWeight: FontWeight.w700,
             fontSize: 10.5,
             letterSpacing: 0.9,

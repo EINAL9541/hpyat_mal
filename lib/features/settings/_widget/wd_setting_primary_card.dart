@@ -64,7 +64,7 @@ class SettingPrimaryCardWidget extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.symmetric(
                     horizontal: context.w(10),
-                    vertical: context.h(4),
+                    vertical: context.h(5),
                   ),
                   decoration: BoxDecoration(
                     color: AppColors.baseWhite.withValues(alpha: 0.10),
@@ -73,33 +73,36 @@ class SettingPrimaryCardWidget extends StatelessWidget {
                       color: AppColors.amberWarm.withValues(alpha: 0.45),
                     ),
                   ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        '★',
-                        style: TextStyle(
-                          color: AppColors.amberWarm,
-                          fontSize: context.sp(11),
-                          fontWeight: FontWeight.w700,
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '★  ',
+                          style: AppTextStyle.captionSmall(context).copyWith(
+                            color: AppColors.amberWarm,
+                            fontSize: 11.5,
+                            fontWeight: FontWeight.w700,
+                            height: 1.2,
+                          ),
                         ),
-                      ),
-                      SizedBox(width: context.w(5)),
-                      Flexible(
-                        child: Text(
-                          LocaleKeys.settings_profileSummary.tr(
+                        TextSpan(
+                          text: LocaleKeys.settings_profileSummary.tr(
                             args: [smokingFreeDays.toString()],
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
                           style: AppTextStyle.captionSmall(context).copyWith(
                             color: AppColors.baseWhite,
                             fontWeight: FontWeight.w600,
-                            height: 1.3,
+                            height: 1.2,
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textHeightBehavior: const TextHeightBehavior(
+                      applyHeightToFirstAscent: false,
+                      applyHeightToLastDescent: false,
+                    ),
                   ),
                 ),
               ],

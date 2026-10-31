@@ -30,7 +30,8 @@ class AppMetricCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final card = Container(
-      padding: padding ??
+      padding:
+          padding ??
           EdgeInsets.symmetric(
             horizontal: context.w(12),
             vertical: context.h(14),

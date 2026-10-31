@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hpyat_mal/core/generate/locale_keys.g.dart';
 import 'package:hpyat_mal/core/models/app_currency.dart';
 import 'package:hpyat_mal/core/services/storage_service.dart';
 import 'package:hpyat_mal/core/theme/app_color.dart';
@@ -62,51 +64,62 @@ class ForestState {
   double get moneySaved => (cigarettesAvoided / cigsPerPack) * packCost;
   double get lifeRegainedHours => (cigarettesAvoided * 11.0) / 60.0;
 
+  double exactDaysAt(DateTime current) =>
+      smokeFreeDurationAt(current).inSeconds / 86400.0;
+  double cigarettesAvoidedAt(DateTime current) =>
+      exactDaysAt(current) * cigsPerDay;
+  double moneySavedAt(DateTime current) =>
+      (cigarettesAvoidedAt(current) / cigsPerPack) * packCost;
+  double lifeRegainedHoursAt(DateTime current) =>
+      (cigarettesAvoidedAt(current) * 11.0) / 60.0;
+
   String get stageName {
+    final currentDays = days;
     if (plantTheme.isCherry) {
-      if (days < 1) return 'Blooming Sakura Courtyard';
-      if (days < 4) return 'Radiant Cherry Sapling';
-      if (days < 10) return 'Flourishing Sakura Tree';
-      if (days < 21) return 'Grand Imperial Sakura';
-      return 'Sacred Sakura Sanctuary';
+      if (currentDays < 1) return LocaleKeys.forest_stage1NameCherry.tr();
+      if (currentDays < 4) return LocaleKeys.forest_stage2NameCherry.tr();
+      if (currentDays < 10) return LocaleKeys.forest_stage3NameCherry.tr();
+      if (currentDays < 21) return LocaleKeys.forest_stage4NameCherry.tr();
+      return LocaleKeys.forest_stage5NameCherry.tr();
     } else {
-      if (days < 1) return 'Awakening Forest Glade';
-      if (days < 4) return 'Radiant Emerald Sapling';
-      if (days < 10) return 'Flourishing Canopy Tree';
-      if (days < 21) return 'Ancient Woodland Guardian';
-      return 'Sacred Emerald Sanctuary';
+      if (currentDays < 1) return LocaleKeys.forest_stage1NameEmerald.tr();
+      if (currentDays < 4) return LocaleKeys.forest_stage2NameEmerald.tr();
+      if (currentDays < 10) return LocaleKeys.forest_stage3NameEmerald.tr();
+      if (currentDays < 21) return LocaleKeys.forest_stage4NameEmerald.tr();
+      return LocaleKeys.forest_stage5NameEmerald.tr();
     }
   }
 
   String get stageDescription {
+    final currentDays = days;
     if (plantTheme.isCherry) {
-      if (days < 1) {
-        return 'Delicate pink cherry blossoms awakening in the morning dew.';
+      if (currentDays < 1) {
+        return LocaleKeys.forest_stage1DescCherry.tr();
       }
-      if (days < 4) {
-        return 'Graceful branches blooming as roots anchor deep in pure soil.';
+      if (currentDays < 4) {
+        return LocaleKeys.forest_stage2DescCherry.tr();
       }
-      if (days < 10) {
-        return 'Lush sakura clouds dancing in the warm spring breeze.';
+      if (currentDays < 10) {
+        return LocaleKeys.forest_stage3DescCherry.tr();
       }
-      if (days < 21) {
-        return 'A majestic canopy showering fragrant petals across the valley.';
+      if (currentDays < 21) {
+        return LocaleKeys.forest_stage4DescCherry.tr();
       }
-      return 'An eternal cherry blossom sanctuary breathing crystal-clear air.';
+      return LocaleKeys.forest_stage5DescCherry.tr();
     } else {
-      if (days < 1) {
-        return 'Fresh emerald leaves unfolding in the crisp morning sunlight.';
+      if (currentDays < 1) {
+        return LocaleKeys.forest_stage1DescEmerald.tr();
       }
-      if (days < 4) {
-        return 'Strong roots anchoring deep as vibrant green boughs reach skyward.';
+      if (currentDays < 4) {
+        return LocaleKeys.forest_stage2DescEmerald.tr();
       }
-      if (days < 10) {
-        return 'A lush jade canopy rustling softly in the mountain breeze.';
+      if (currentDays < 10) {
+        return LocaleKeys.forest_stage3DescEmerald.tr();
       }
-      if (days < 21) {
-        return 'Sunlit emerald foliage sheltering a thriving forest ecosystem.';
+      if (currentDays < 21) {
+        return LocaleKeys.forest_stage4DescEmerald.tr();
       }
-      return 'An eternal emerald sanctuary breathing pure, revitalized air.';
+      return LocaleKeys.forest_stage5DescEmerald.tr();
     }
   }
 

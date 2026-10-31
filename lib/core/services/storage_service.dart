@@ -42,6 +42,22 @@ class CravingLog {
         resisted: json['resisted'] as bool,
         note: (json['note'] as String?) ?? '',
       );
+
+  CravingLog copyWith({
+    DateTime? timestamp,
+    String? trigger,
+    int? intensity,
+    bool? resisted,
+    String? note,
+  }) =>
+      CravingLog(
+        id: id,
+        timestamp: timestamp ?? this.timestamp,
+        trigger: trigger ?? this.trigger,
+        intensity: intensity ?? this.intensity,
+        resisted: resisted ?? this.resisted,
+        note: note ?? this.note,
+      );
 }
 
 class WishlistItem {
@@ -51,6 +67,7 @@ class WishlistItem {
   final String iconKey;
   final String? imagePath;
   final bool isCompleted;
+  final DateTime? claimedAt;
 
   const WishlistItem({
     required this.id,
@@ -59,6 +76,7 @@ class WishlistItem {
     required this.iconKey,
     this.imagePath,
     this.isCompleted = false,
+    this.claimedAt,
   });
 
   Map<String, dynamic> toJson() => {
@@ -68,6 +86,7 @@ class WishlistItem {
         'iconKey': iconKey,
         'imagePath': imagePath,
         'isCompleted': isCompleted,
+        'claimedAt': claimedAt?.toIso8601String(),
       };
 
   factory WishlistItem.fromJson(Map<String, dynamic> json) => WishlistItem(
@@ -77,6 +96,9 @@ class WishlistItem {
         iconKey: (json['iconKey'] as String?) ?? 'gift',
         imagePath: json['imagePath'] as String?,
         isCompleted: (json['isCompleted'] as bool?) ?? false,
+        claimedAt: json['claimedAt'] != null
+            ? DateTime.tryParse(json['claimedAt'] as String)
+            : null,
       );
 
   WishlistItem copyWith({
@@ -86,6 +108,8 @@ class WishlistItem {
     String? imagePath,
     bool clearImagePath = false,
     bool? isCompleted,
+    DateTime? claimedAt,
+    bool clearClaimedAt = false,
   }) =>
       WishlistItem(
         id: id,
@@ -94,6 +118,7 @@ class WishlistItem {
         iconKey: iconKey ?? this.iconKey,
         imagePath: clearImagePath ? null : (imagePath ?? this.imagePath),
         isCompleted: isCompleted ?? this.isCompleted,
+        claimedAt: clearClaimedAt ? null : (claimedAt ?? this.claimedAt),
       );
 }
 
@@ -218,27 +243,60 @@ class StorageService {
       _prefs.setInt(_keyForestVitality, value.clamp(10, 100));
 
   // Breathing sessions
-  int getBreathingSessions() => _prefs.getInt(_keyBreathingCount) ?? 4;
+  int getBreathingSessions() => _prefs.getInt(_keyBreathingCount) ?? 0;
   Future<void> incrementBreathingSessions() async {
     final count = getBreathingSessions() + 1;
     await _prefs.setInt(_keyBreathingCount, count);
   }
 
   // Craving Logs
+  static bool _isLegacySeedLog(CravingLog log) {
+    return (log.id == '1' && log.trigger == 'Post-Meal') ||
+        (log.id == '2' && log.trigger == 'Stress') ||
+        (log.id == '3' &&
+            log.trigger == 'Morning Coffee' &&
+            log.note == 'Switched coffee to green herbal tea.');
+  }
+
   List<CravingLog> getCravingLogs() {
     final rawList = _prefs.getStringList(_keyCravingLogs);
     if (rawList == null || rawList.isEmpty) {
-      return _initialDefaultLogs();
+      return [];
     }
-    return rawList
-        .map((str) => CravingLog.fromJson(jsonDecode(str) as Map<String, dynamic>))
-        .toList()
+    final logs = rawList
+        .map(
+          (str) => CravingLog.fromJson(jsonDecode(str) as Map<String, dynamic>),
+        )
+        .toList();
+    final filtered = logs.where((log) => !_isLegacySeedLog(log)).toList()
       ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    if (filtered.length != logs.length) {
+      _prefs.setStringList(
+        _keyCravingLogs,
+        filtered.map((e) => jsonEncode(e.toJson())).toList(),
+      );
+    }
+    return filtered;
   }
 
   Future<void> saveCravingLog(CravingLog log) async {
     final logs = getCravingLogs();
     logs.insert(0, log);
+    final rawList = logs.map((e) => jsonEncode(e.toJson())).toList();
+    await _prefs.setStringList(_keyCravingLogs, rawList);
+  }
+
+  Future<void> updateCravingLog(CravingLog updatedLog) async {
+    final logs = getCravingLogs().map((log) {
+      if (log.id == updatedLog.id) return updatedLog;
+      return log;
+    }).toList();
+    final rawList = logs.map((e) => jsonEncode(e.toJson())).toList();
+    await _prefs.setStringList(_keyCravingLogs, rawList);
+  }
+
+  Future<void> deleteCravingLog(String id) async {
+    final logs = getCravingLogs().where((log) => log.id != id).toList();
     final rawList = logs.map((e) => jsonEncode(e.toJson())).toList();
     await _prefs.setStringList(_keyCravingLogs, rawList);
   }
@@ -296,41 +354,16 @@ class StorageService {
   Future<void> toggleWishlistItem(String id) async {
     final items = getWishlist().map((item) {
       if (item.id == id) {
-        return item.copyWith(isCompleted: !item.isCompleted);
+        final nowCompleted = !item.isCompleted;
+        return item.copyWith(
+          isCompleted: nowCompleted,
+          claimedAt: nowCompleted ? DateTime.now() : null,
+          clearClaimedAt: !nowCompleted,
+        );
       }
       return item;
     }).toList();
     final rawList = items.map((e) => jsonEncode(e.toJson())).toList();
     await _prefs.setStringList(_keyWishlist, rawList);
-  }
-
-  List<CravingLog> _initialDefaultLogs() {
-    final now = DateTime.now();
-    return [
-      CravingLog(
-        id: '1',
-        timestamp: now.subtract(const Duration(hours: 4)),
-        trigger: 'Post-Meal',
-        intensity: 3,
-        resisted: true,
-        note: 'Had strong urge after lunch. Did 3 mins breathing instead.',
-      ),
-      CravingLog(
-        id: '2',
-        timestamp: now.subtract(const Duration(hours: 18)),
-        trigger: 'Stress',
-        intensity: 4,
-        resisted: true,
-        note: 'Work deadline was tense. Drank a cold glass of water.',
-      ),
-      CravingLog(
-        id: '3',
-        timestamp: now.subtract(const Duration(days: 1, hours: 2)),
-        trigger: 'Morning Coffee',
-        intensity: 4,
-        resisted: true,
-        note: 'Switched coffee to green herbal tea.',
-      ),
-    ];
   }
 }

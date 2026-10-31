@@ -41,9 +41,11 @@ class LanguageChoiceCardWidget extends StatelessWidget {
         child: Row(
           children: [
             Container(
+              width: context.w(68),
+              alignment: Alignment.center,
               padding: EdgeInsets.symmetric(
-                horizontal: context.w(12),
-                vertical: context.h(5),
+                horizontal: context.w(8),
+                vertical: context.h(6),
               ),
               decoration: BoxDecoration(
                 color: isSelected
@@ -53,11 +55,18 @@ class LanguageChoiceCardWidget extends StatelessWidget {
               ),
               child: Text(
                 badge,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                textHeightBehavior: const TextHeightBehavior(
+                  applyHeightToFirstAscent: false,
+                  applyHeightToLastDescent: false,
+                ),
                 style: AppTextStyle.captionSmall(context).copyWith(
                   color: isSelected
                       ? AppColors.baseWhite
                       : AppColors.forestPrimary,
                   fontWeight: FontWeight.w700,
+                  height: 1.0,
                 ),
               ),
             ),

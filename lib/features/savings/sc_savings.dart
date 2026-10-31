@@ -3,16 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hpyat_mal/core/extensions/context_extensions.dart';
+import 'package:hpyat_mal/core/generate/locale_keys.g.dart';
 import 'package:hpyat_mal/core/services/storage_service.dart';
 import 'package:hpyat_mal/core/theme/app_color.dart';
 import 'package:hpyat_mal/core/theme/app_text_style.dart';
+import 'package:hpyat_mal/core/ui/widgets/wd_bottom_sheet.dart';
 import 'package:hpyat_mal/features/forest/_provider/forest_provider.dart';
 import 'package:hpyat_mal/features/savings/_provider/savings_provider.dart';
 import 'package:hpyat_mal/features/savings/_widget/wd_add_wishlist_dialog.dart';
 import 'package:hpyat_mal/features/savings/_widget/wd_wishlist_card.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
-enum _GoalFilter { all, active, claimed }
+enum _GoalFilter { active, claimed }
 
 class SavingsScreen extends ConsumerStatefulWidget {
   const SavingsScreen({super.key});
@@ -22,7 +24,7 @@ class SavingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SavingsScreenState extends ConsumerState<SavingsScreen> {
-  _GoalFilter _filter = _GoalFilter.all;
+  _GoalFilter _filter = _GoalFilter.active;
 
   void _openGoalSheet(
     BuildContext context,
@@ -33,28 +35,34 @@ class _SavingsScreenState extends ConsumerState<SavingsScreen> {
     String? presetIconKey,
   }) {
     HapticFeedback.selectionClick();
-    showModalBottomSheet(
+    showAppBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
       builder: (_) => AddWishlistDialogWidget(
         currencyUnit: forest.currencyUnit(context.locale.languageCode),
         initialItem: existingItem,
         presetTitle: presetTitle,
         presetAmount: presetAmount,
         presetIconKey: presetIconKey,
+        dailySavings:
+            (forest.cigsPerDay / forest.cigsPerPack) * forest.packCost,
         onAdd: (title, targetAmount, iconKey, imagePath) {
           if (existingItem != null) {
-            ref.read(savingsProvider.notifier).updateWishlistItem(
+            ref
+                .read(savingsProvider.notifier)
+                .updateWishlistItem(
                   id: existingItem.id,
                   title: title,
                   targetAmount: targetAmount,
                   iconKey: iconKey,
                   imagePath: imagePath,
                   isCompleted: existingItem.isCompleted,
+                  claimedAt: existingItem.claimedAt,
                 );
           } else {
-            ref.read(savingsProvider.notifier).addWishlistItem(
+            ref
+                .read(savingsProvider.notifier)
+                .addWishlistItem(
                   title: title,
                   targetAmount: targetAmount,
                   iconKey: iconKey,
@@ -68,6 +76,7 @@ class _SavingsScreenState extends ConsumerState<SavingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    EasyLocalization.of(context);
     final forest = ref.watch(forestProvider);
     final savings = ref.watch(savingsProvider);
     final langCode = context.locale.languageCode;
@@ -80,8 +89,10 @@ class _SavingsScreenState extends ConsumerState<SavingsScreen> {
 
     final totalSaved = forest.moneySaved;
     final claimedTotal = savings.claimedTotal;
-    final availableSavings =
-        (totalSaved - claimedTotal).clamp(0.0, double.infinity);
+    final availableSavings = (totalSaved - claimedTotal).clamp(
+      0.0,
+      double.infinity,
+    );
 
     final List<WishlistItem> filteredGoals;
     switch (_filter) {
@@ -90,12 +101,6 @@ class _SavingsScreenState extends ConsumerState<SavingsScreen> {
         break;
       case _GoalFilter.claimed:
         filteredGoals = savings.completedItems;
-        break;
-      case _GoalFilter.all:
-        filteredGoals = [
-          ...savings.activeItems,
-          ...savings.completedItems,
-        ];
         break;
     }
 
@@ -121,7 +126,7 @@ class _SavingsScreenState extends ConsumerState<SavingsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Savings & Goals",
+                          LocaleKeys.savings_title.tr(),
                           style: AppTextStyle.headingLarge(context).copyWith(
                             color: AppColors.forestPrimary,
                             fontSize: 22,
@@ -130,23 +135,15 @@ class _SavingsScreenState extends ConsumerState<SavingsScreen> {
                         ),
                         SizedBox(height: context.h(2)),
                         Text(
-                          "Turn smoke-free days into real rewards",
+                          LocaleKeys.savings_subtitle.tr(),
                           style: AppTextStyle.captionMedium(context),
                         ),
                       ],
                     ),
                   ),
                   SizedBox(width: context.w(12)),
-                  ElevatedButton.icon(
+                  ElevatedButton(
                     onPressed: () => _openGoalSheet(context, forest),
-                    icon: Icon(LucideIcons.plus, size: context.w(15)),
-                    label: Text(
-                      "New Goal",
-                      style: AppTextStyle.bodySemiBold(context).copyWith(
-                        color: AppColors.baseWhite,
-                        fontSize: 13.5,
-                      ),
-                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.emerald,
                       foregroundColor: AppColors.baseWhite,
@@ -157,6 +154,26 @@ class _SavingsScreenState extends ConsumerState<SavingsScreen> {
                       shape: const StadiumBorder(),
                       elevation: 0,
                     ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(LucideIcons.plus, size: context.w(15)),
+                        SizedBox(width: context.w(6)),
+                        Text(
+                          LocaleKeys.savings_newBtn.tr(),
+                          textHeightBehavior: const TextHeightBehavior(
+                            applyHeightToFirstAscent: false,
+                            applyHeightToLastDescent: false,
+                          ),
+                          style: AppTextStyle.bodySemiBold(context).copyWith(
+                            color: AppColors.baseWhite,
+                            fontSize: 13.5,
+                            height: 1.0,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -166,7 +183,7 @@ class _SavingsScreenState extends ConsumerState<SavingsScreen> {
               // 2. Solid House Feature Band Hero Card (#1E3932 / #381824)
               Container(
                 width: double.infinity,
-                padding: EdgeInsets.all(context.w(20)),
+                padding: EdgeInsets.all(context.w(18)),
                 decoration: BoxDecoration(
                   color: AppColors.forestDeep,
                   borderRadius: context.borderRadius(all: 16),
@@ -178,21 +195,28 @@ class _SavingsScreenState extends ConsumerState<SavingsScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          claimedTotal > 0
-                              ? "AVAILABLE FOR GOALS"
-                              : "TOTAL MONEY SAVED",
-                          style: AppTextStyle.captionSmall(context).copyWith(
-                            color: AppColors.baseWhite.withValues(alpha: 0.72),
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 0.8,
+                        Flexible(
+                          child: Text(
+                            claimedTotal > 0
+                                ? LocaleKeys.savings_availableForGoals.tr()
+                                : LocaleKeys.savings_totalMoneySaved.tr(),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTextStyle.captionSmall(context).copyWith(
+                              color: AppColors.baseWhite.withValues(
+                                alpha: 0.72,
+                              ),
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 0.6,
+                            ),
                           ),
                         ),
+                        SizedBox(width: context.w(8)),
                         // Gold-outlined Daily Rate Pill
                         Container(
                           padding: EdgeInsets.symmetric(
                             horizontal: context.w(10),
-                            vertical: context.h(4),
+                            vertical: context.h(5),
                           ),
                           decoration: BoxDecoration(
                             color: Colors.transparent,
@@ -201,6 +225,7 @@ class _SavingsScreenState extends ConsumerState<SavingsScreen> {
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Icon(
                                 LucideIcons.trendingUp,
@@ -209,12 +234,21 @@ class _SavingsScreenState extends ConsumerState<SavingsScreen> {
                               ),
                               SizedBox(width: context.w(4)),
                               Text(
-                                "+${forest.formatMoney(dailySavings, langCode)}/day",
-                                style:
-                                    AppTextStyle.captionSmall(context).copyWith(
-                                  color: AppColors.amberWarm,
-                                  fontWeight: FontWeight.w700,
+                                LocaleKeys.savings_perDayRate.tr(
+                                  args: [
+                                    forest.formatMoney(dailySavings, langCode),
+                                  ],
                                 ),
+                                textHeightBehavior: const TextHeightBehavior(
+                                  applyHeightToFirstAscent: false,
+                                  applyHeightToLastDescent: false,
+                                ),
+                                style: AppTextStyle.captionSmall(context)
+                                    .copyWith(
+                                      color: AppColors.amberWarm,
+                                      fontWeight: FontWeight.w700,
+                                      height: 1.0,
+                                    ),
                               ),
                             ],
                           ),
@@ -227,33 +261,36 @@ class _SavingsScreenState extends ConsumerState<SavingsScreen> {
                         claimedTotal > 0 ? availableSavings : totalSaved,
                         langCode,
                       ),
-                      style: AppTextStyle.numberDisplay(context).copyWith(
-                        color: AppColors.baseWhite,
-                        fontSize: 38,
-                      ),
+                      style: AppTextStyle.numberDisplay(context)
+                          .copyWith(color: AppColors.baseWhite, fontSize: 32),
                     ),
                     if (claimedTotal > 0) ...[
                       SizedBox(height: context.h(4)),
                       Text(
-                        "Total saved: ${forest.formatMoney(totalSaved, langCode)}  •  Claimed: ${forest.formatMoney(claimedTotal, langCode)}",
+                        LocaleKeys.savings_savedAndClaimed.tr(
+                          args: [
+                            NumberFormat('#,###').format(totalSaved.round()),
+                            forest.formatMoney(claimedTotal, langCode),
+                          ],
+                        ),
                         style: AppTextStyle.captionSmall(context).copyWith(
                           color: AppColors.leafSoft,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],
-                    SizedBox(height: context.h(16)),
+                    SizedBox(height: context.h(12)),
                     Divider(
                       height: 1,
                       color: AppColors.baseWhite.withValues(alpha: 0.14),
                     ),
-                    SizedBox(height: context.h(14)),
+                    SizedBox(height: context.h(10)),
                     IntrinsicHeight(
                       child: Row(
                         children: [
                           Expanded(
                             child: _HeroStatColumn(
-                              label: "Monthly Pace",
+                              label: LocaleKeys.savings_monthly.tr(),
                               value: forest.formatMoney(
                                 monthlySavings,
                                 langCode,
@@ -267,7 +304,7 @@ class _SavingsScreenState extends ConsumerState<SavingsScreen> {
                           ),
                           Expanded(
                             child: _HeroStatColumn(
-                              label: "Yearly Pace",
+                              label: LocaleKeys.savings_yearly.tr(),
                               value: forest.formatMoney(
                                 yearlySavings,
                                 langCode,
@@ -281,8 +318,8 @@ class _SavingsScreenState extends ConsumerState<SavingsScreen> {
                           ),
                           Expanded(
                             child: _HeroStatColumn(
-                              label: "Packs Skipped",
-                              value: "${packsAvoided.toStringAsFixed(1)} packs",
+                              label: LocaleKeys.savings_packsSkipped.tr(),
+                              value: packsAvoided.toStringAsFixed(1),
                               alignEnd: true,
                             ),
                           ),
@@ -293,71 +330,38 @@ class _SavingsScreenState extends ConsumerState<SavingsScreen> {
                 ),
               ),
 
-              SizedBox(height: context.h(22)),
+              SizedBox(height: context.h(18)),
 
-              // 3. Goals Section Header + Filter Pills (when goals exist)
+              // 3. Goals Section Header + Sliding Switch Toggle
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    "REWARD GOALS",
-                    style: AppTextStyle.captionSmall(context).copyWith(
-                      color: AppColors.textMuted,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.9,
+                  Expanded(
+                    child: Text(
+                      LocaleKeys.savings_rewardGoals.tr(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyle.headingSmall(context)
+                          .copyWith(color: AppColors.forestDeep),
                     ),
                   ),
-                  if (savings.wishlist.isNotEmpty)
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        _FilterChipPill(
-                          label: "All (${savings.wishlist.length})",
-                          isSelected: _filter == _GoalFilter.all,
-                          onTap: () =>
-                              setState(() => _filter = _GoalFilter.all),
-                        ),
-                        SizedBox(width: context.w(6)),
-                        _FilterChipPill(
-                          label: "Active (${savings.activeItems.length})",
-                          isSelected: _filter == _GoalFilter.active,
-                          onTap: () =>
-                              setState(() => _filter = _GoalFilter.active),
-                        ),
-                        SizedBox(width: context.w(6)),
-                        _FilterChipPill(
-                          label: "Claimed (${savings.completedItems.length})",
-                          isSelected: _filter == _GoalFilter.claimed,
-                          onTap: () =>
-                              setState(() => _filter = _GoalFilter.claimed),
-                        ),
-                      ],
+                  if (savings.wishlist.isNotEmpty) ...[
+                    SizedBox(width: context.w(8)),
+                    _GoalSwitchToggle(
+                      selectedFilter: _filter,
+                      onChanged: (next) => setState(() => _filter = next),
                     ),
+                  ],
                 ],
               ),
 
-              SizedBox(height: context.h(12)),
+              SizedBox(height: context.h(14)),
 
               // 4. Empty State or Goal Cards
               if (savings.wishlist.isEmpty)
                 _EmptyGoalsCard(
-                  dailySavings: dailySavings,
-                  formatMoney: (amount) =>
-                      forest.formatMoney(amount, langCode),
                   onCreateCustom: () => _openGoalSheet(context, forest),
-                  onSelectPreset: (title, multiplierDays, iconKey) {
-                    final suggestedCost = (dailySavings * multiplierDays)
-                        .clamp(1000.0, 10000000.0)
-                        .roundToDouble();
-                    _openGoalSheet(
-                      context,
-                      forest,
-                      presetTitle: title,
-                      presetAmount: suggestedCost,
-                      presetIconKey: iconKey,
-                    );
-                  },
                 )
               else if (filteredGoals.isEmpty)
                 Container(
@@ -384,17 +388,16 @@ class _SavingsScreenState extends ConsumerState<SavingsScreen> {
                       SizedBox(height: context.h(8)),
                       Text(
                         _filter == _GoalFilter.claimed
-                            ? "No claimed rewards yet"
-                            : "No active goals right now",
-                        style: AppTextStyle.bodySemiBold(context).copyWith(
-                          color: AppColors.forestDeep,
-                        ),
+                            ? LocaleKeys.savings_noClaimedTitle.tr()
+                            : LocaleKeys.savings_noActiveTitle.tr(),
+                        style: AppTextStyle.bodySemiBold(context)
+                            .copyWith(color: AppColors.forestDeep),
                       ),
                       SizedBox(height: context.h(4)),
                       Text(
                         _filter == _GoalFilter.claimed
-                            ? "Once a goal reaches 100%, claim it to celebrate your milestone."
-                            : "Add a new reward goal to keep your momentum going.",
+                            ? LocaleKeys.savings_noClaimedSubtitle.tr()
+                            : LocaleKeys.savings_noActiveSubtitle.tr(),
                         textAlign: TextAlign.center,
                         style: AppTextStyle.captionMedium(context),
                       ),
@@ -411,11 +414,10 @@ class _SavingsScreenState extends ConsumerState<SavingsScreen> {
                         forest.formatMoney(amount, langCode),
                     onToggle: () =>
                         ref.read(savingsProvider.notifier).toggleItem(item.id),
-                    onEdit: () => _openGoalSheet(
-                      context,
-                      forest,
-                      existingItem: item,
-                    ),
+                    onEdit: () =>
+                        _openGoalSheet(context, forest, existingItem: item),
+                    onChangePhoto: () =>
+                        _openGoalSheet(context, forest, existingItem: item),
                     onDelete: () {
                       ref.read(savingsProvider.notifier).deleteItem(item.id);
                     },
@@ -445,8 +447,9 @@ class _HeroStatColumn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment:
-          alignEnd ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      crossAxisAlignment: alignEnd
+          ? CrossAxisAlignment.end
+          : CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
@@ -474,73 +477,124 @@ class _HeroStatColumn extends StatelessWidget {
   }
 }
 
-class _FilterChipPill extends StatelessWidget {
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
+class _GoalSwitchToggle extends StatelessWidget {
+  final _GoalFilter selectedFilter;
+  final ValueChanged<_GoalFilter> onChanged;
 
-  const _FilterChipPill({
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
+  const _GoalSwitchToggle({
+    required this.selectedFilter,
+    required this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        HapticFeedback.selectionClick();
-        onTap();
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 160),
-        padding: EdgeInsets.symmetric(
-          horizontal: context.w(10),
-          vertical: context.h(4),
+    final isClaimed = selectedFilter == _GoalFilter.claimed;
+
+    return Container(
+      width: context.w(156),
+      height: context.h(34),
+      padding: EdgeInsets.all(context.w(3)),
+      decoration: ShapeDecoration(
+        color: AppColors.surfaceCard,
+        shape: StadiumBorder(
+          side: BorderSide(color: AppColors.border, width: 1),
         ),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.forestDeep : AppColors.surfaceCardMuted,
-          borderRadius: context.borderRadius(all: 50),
-          border: Border.all(
-            color: isSelected ? AppColors.forestDeep : AppColors.borderSubtle,
+        shadows: AppColors.cardShadow,
+      ),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          AnimatedAlign(
+            duration: const Duration(milliseconds: 220),
+            curve: Curves.easeOutCubic,
+            alignment:
+                isClaimed ? Alignment.centerRight : Alignment.centerLeft,
+            child: FractionallySizedBox(
+              widthFactor: 0.5,
+              heightFactor: 1.0,
+              child: DecoratedBox(
+                decoration: ShapeDecoration(
+                  color: AppColors.emerald,
+                  shape: const StadiumBorder(),
+                ),
+              ),
+            ),
           ),
-        ),
-        child: Text(
-          label,
-          style: AppTextStyle.captionSmall(context).copyWith(
-            color: isSelected ? AppColors.baseWhite : AppColors.textSecondary,
-            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-            fontSize: 11,
+          Row(
+            children: [
+              Expanded(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    if (isClaimed) {
+                      HapticFeedback.selectionClick();
+                      onChanged(_GoalFilter.active);
+                    }
+                  },
+                  child: Center(
+                    child: Text(
+                      LocaleKeys.savings_tabActive.tr(),
+                      textAlign: TextAlign.center,
+                      textHeightBehavior: const TextHeightBehavior(
+                        applyHeightToFirstAscent: false,
+                        applyHeightToLastDescent: false,
+                      ),
+                      style: AppTextStyle.captionSmall(context).copyWith(
+                        color: !isClaimed
+                            ? AppColors.baseWhite
+                            : AppColors.textSecondary,
+                        fontWeight:
+                            !isClaimed ? FontWeight.w700 : FontWeight.w600,
+                        height: 1.0,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    if (!isClaimed) {
+                      HapticFeedback.selectionClick();
+                      onChanged(_GoalFilter.claimed);
+                    }
+                  },
+                  child: Center(
+                    child: Text(
+                      LocaleKeys.savings_tabClaimed.tr(),
+                      textAlign: TextAlign.center,
+                      textHeightBehavior: const TextHeightBehavior(
+                        applyHeightToFirstAscent: false,
+                        applyHeightToLastDescent: false,
+                      ),
+                      style: AppTextStyle.captionSmall(context).copyWith(
+                        color: isClaimed
+                            ? AppColors.baseWhite
+                            : AppColors.textSecondary,
+                        fontWeight:
+                            isClaimed ? FontWeight.w700 : FontWeight.w600,
+                        height: 1.0,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ),
+        ],
       ),
     );
   }
 }
 
 class _EmptyGoalsCard extends StatelessWidget {
-  final double dailySavings;
-  final String Function(num amount) formatMoney;
   final VoidCallback onCreateCustom;
-  final void Function(String title, int multiplierDays, String iconKey)
-      onSelectPreset;
 
-  const _EmptyGoalsCard({
-    required this.dailySavings,
-    required this.formatMoney,
-    required this.onCreateCustom,
-    required this.onSelectPreset,
-  });
+  const _EmptyGoalsCard({required this.onCreateCustom});
 
   @override
   Widget build(BuildContext context) {
-    final presets = [
-      (title: 'Specialty Coffee', days: 3, iconKey: 'coffee', icon: LucideIcons.coffee),
-      (title: 'Favorite Meal', days: 7, iconKey: 'utensils', icon: LucideIcons.utensils),
-      (title: 'Wireless Earbuds', days: 14, iconKey: 'headphones', icon: LucideIcons.headphones),
-      (title: 'Running Shoes', days: 30, iconKey: 'footprints', icon: LucideIcons.footprints),
-    ];
-
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(context.w(20)),
@@ -567,96 +621,48 @@ class _EmptyGoalsCard extends StatelessWidget {
           ),
           SizedBox(height: context.h(14)),
           Text(
-            "Set your first reward goal",
-            style: AppTextStyle.headingSmall(context).copyWith(
-              color: AppColors.forestDeep,
-            ),
+            LocaleKeys.savings_emptyTitle.tr(),
+            textAlign: TextAlign.center,
+            style: AppTextStyle.headingSmall(context)
+                .copyWith(color: AppColors.forestDeep),
           ),
           SizedBox(height: context.h(6)),
           Text(
-            "Give your smoke-free savings a purpose. Pick something you'd love to buy for yourself and watch every day fund it.",
+            LocaleKeys.savings_emptySubtitle.tr(),
             textAlign: TextAlign.center,
             style: AppTextStyle.captionMedium(context),
           ),
-          SizedBox(height: context.h(18)),
-
-          // Quick starter ideas
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "QUICK IDEAS",
-              style: AppTextStyle.captionSmall(context).copyWith(
-                color: AppColors.textMuted,
-                fontWeight: FontWeight.w700,
-                fontSize: 10.5,
-                letterSpacing: 0.8,
-              ),
-            ),
-          ),
-          SizedBox(height: context.h(8)),
-          Wrap(
-            spacing: context.w(8),
-            runSpacing: context.h(8),
-            children: presets.map((preset) {
-              return InkWell(
-                onTap: () => onSelectPreset(
-                  preset.title,
-                  preset.days,
-                  preset.iconKey,
-                ),
-                borderRadius: context.borderRadius(all: 50),
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: context.w(12),
-                    vertical: context.h(7),
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.surfaceCardMuted,
-                    borderRadius: context.borderRadius(all: 50),
-                    border: Border.all(color: AppColors.borderSubtle),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        preset.icon,
-                        size: context.w(13),
-                        color: AppColors.forestPrimary,
-                      ),
-                      SizedBox(width: context.w(6)),
-                      Text(
-                        "${preset.title} (${preset.days}d)",
-                        style: AppTextStyle.captionSmall(context).copyWith(
-                          color: AppColors.forestDeep,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-
           SizedBox(height: context.h(20)),
-
           SizedBox(
             width: double.infinity,
             height: context.h(48),
-            child: ElevatedButton.icon(
+            child: ElevatedButton(
               onPressed: onCreateCustom,
-              icon: Icon(LucideIcons.plus, size: context.w(16)),
-              label: Text(
-                "Create Custom Goal",
-                style: AppTextStyle.bodySemiBold(context).copyWith(
-                  color: AppColors.baseWhite,
-                ),
-              ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.emerald,
                 foregroundColor: AppColors.baseWhite,
                 elevation: 0,
                 shape: const StadiumBorder(),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(LucideIcons.plus, size: context.w(16)),
+                  SizedBox(width: context.w(8)),
+                  Text(
+                    LocaleKeys.savings_createGoalBtn.tr(),
+                    textHeightBehavior: const TextHeightBehavior(
+                      applyHeightToFirstAscent: false,
+                      applyHeightToLastDescent: false,
+                    ),
+                    style: AppTextStyle.bodySemiBold(context).copyWith(
+                      color: AppColors.baseWhite,
+                      height: 1.0,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
